@@ -1,17 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using OrderManagement.Domain.Messaging;
+using OrderManagement.Domain.Repositories;
+using OrderManagement.Domain.Services;
+using OrderManagement.Messaging.RabbitMQ;
+using OrderManagement.Repository.Mongo;
 
-namespace OrderList.Web
+namespace OrderManagement.Client.Web
 {
     public class Startup
     {
@@ -26,6 +24,9 @@ namespace OrderList.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSingleton<IOrderService, OrderService>();
+            services.AddSingleton<IOrderRepository, MongoOrderRepository>();
+            services.AddSingleton<ISystemBus, RabbitMQSystemBus>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,13 +36,8 @@ namespace OrderList.Web
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseHttpsRedirection();
-
+            
             app.UseRouting();
-
-            app.UseAuthorization();
-
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }

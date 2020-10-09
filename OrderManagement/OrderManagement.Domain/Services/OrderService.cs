@@ -30,7 +30,10 @@ namespace OrderManagement.Domain.Services
         public async Task CreateAsync(Order order)
         {
             await _repository.CreateAsync(order);
-            await _bus.PostAsync(new OrderCreated());
+            await _bus.PostAsync(new OrderCreated
+            {
+                Order = order
+            });
         }
 
         public async Task UpdateDeliveryAddressAsync(Guid id, Address newAddress)
@@ -49,6 +52,11 @@ namespace OrderManagement.Domain.Services
         {
             await _repository.CancelOrderAsync(id);
             await _bus.PostAsync(new OrderCancelled());
+        }
+
+        public Task FulfillOrderAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

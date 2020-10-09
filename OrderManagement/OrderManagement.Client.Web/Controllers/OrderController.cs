@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using OrderManagement.Domain.Model;
 using OrderManagement.Domain.Services;
 
-namespace OrderManagement.Web.Controllers
+namespace OrderManagement.Client.Web.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class OrderController : Controller
     {
         private readonly IOrderService _service;
@@ -17,30 +17,30 @@ namespace OrderManagement.Web.Controllers
         {
             _service = service;
         }
-        
-        [HttpPost]
-        public async Task<IActionResult> Create(Order order)
+
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Create([FromBody] Order order)
         {
             await _service.CreateAsync(order);
             return Ok();
         }
-        
-        [HttpDelete]
-        public async Task<IActionResult> Cancel(Guid id)
+
+        [HttpDelete("[action]")]
+        public async Task<IActionResult> Cancel([FromBody] Guid id)
         {
             await _service.CancelOrderAsync(id);
             return Ok();
         }
-        
-        [HttpPut]
-        public async Task<IActionResult> UpdateDeliveryAddress(Guid id, Address newAddress)
+
+        [HttpPut("[action]/{id}")]
+        public async Task<IActionResult> UpdateDeliveryAddress([FromQuery] Guid id, [FromBody] Address newAddress)
         {
             await _service.UpdateDeliveryAddressAsync(id, newAddress);
             return Ok();
         }
-        
-        [HttpPut]
-        public async Task<IActionResult> UpdateOrderItems(Guid id, IEnumerable<OrderItem> items)
+
+        [HttpPut("[action]{id}")]
+        public async Task<IActionResult> UpdateOrderItems([FromQuery] Guid id, [FromBody] IEnumerable<OrderItem> items)
         {
             await _service.UpdateOrderItemsAsync(id, items);
             return Ok();

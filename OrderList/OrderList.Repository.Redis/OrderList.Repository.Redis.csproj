@@ -5,11 +5,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="StackExchange.Redis" Version="2.1.58" />
+      <ProjectReference Include="..\OrderList.Domain\OrderList.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\OrderList.Domain\OrderList.Domain.csproj" />
+      <PackageReference Include="ServiceStack.Redis" Version="5.9.2" />
     </ItemGroup>
 
 </Project>

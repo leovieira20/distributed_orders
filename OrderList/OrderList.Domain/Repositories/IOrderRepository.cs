@@ -9,5 +9,6 @@ namespace OrderList.Domain.Repositories
     {
         Task<Order> GetAsync(Guid id);
         Task<IEnumerable<Order>> GetAsync(int page, int size);
+        Task CreateAsync(Order order);
     }
 }

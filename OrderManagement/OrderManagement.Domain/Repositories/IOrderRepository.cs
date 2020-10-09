@@ -11,5 +11,6 @@ namespace OrderManagement.Domain.Repositories
         Task CancelOrderAsync(Guid id);
         Task UpdateDeliveryAddress(Guid id, Address newAddress);
         Task UpdateOrderItems(Guid id, IEnumerable<OrderItem> items);
+        Task<Product> GetProduct(Guid id);
     }
 }

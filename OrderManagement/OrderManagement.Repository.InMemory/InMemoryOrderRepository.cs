@@ -27,5 +27,10 @@ namespace OrderManagement.Repository.InMemory
         {
             throw new NotImplementedException();
         }
+
+        public Task<Product> GetProduct(Guid id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

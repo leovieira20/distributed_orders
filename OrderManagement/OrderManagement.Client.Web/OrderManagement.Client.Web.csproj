@@ -6,6 +6,8 @@
 
     <ItemGroup>
       <ProjectReference Include="..\OrderManagement.Domain\OrderManagement.Domain.csproj" />
+      <ProjectReference Include="..\OrderManagement.Messaging.RabbitMQ\OrderManagement.Messaging.RabbitMQ.csproj" />
+      <ProjectReference Include="..\OrderManagement.Repository.Mongo\OrderManagement.Repository.Mongo.csproj" />
     </ItemGroup>
 
 

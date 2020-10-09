@@ -22,5 +22,10 @@ namespace OrderList.Repository.InMemory
                 .Skip(page * size)
                 .Take(size));
         }
+
+        public Task CreateAsync(Order order)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
