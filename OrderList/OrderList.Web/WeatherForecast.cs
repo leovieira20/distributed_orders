@@ -1,6 +1,6 @@
 using System;
 
-namespace OrderList
+namespace OrderList.Web
 {
     public class WeatherForecast
     {
