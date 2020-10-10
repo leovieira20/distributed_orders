@@ -4,7 +4,7 @@ namespace ProductInventory.Domain.Model
 {
     public class Order
     {
-        public string Id { get; set; }
+        public string OrderId { get; set; }
         public IEnumerable<OrderItem> Items { get; set; }
     }
 }

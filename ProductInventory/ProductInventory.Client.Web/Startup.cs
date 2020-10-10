@@ -43,10 +43,10 @@ namespace ProductInventory.Client.Web
             container.RegisterSingleton<ISystemBus, Producer>();
             container.RegisterSingleton<IProductRepository, MongoProductRepository>();
             container.RegisterSingleton<IStockChecker, StockChecker>();
-            container.RegisterSingleton<IOrderCreatedConsumer, OrderCreatedConsumer>();
+            container.RegisterSingleton<IConsumer<OrderCreated>, OrderCreatedConsumer>();
             container.RegisterSingleton(() =>
             {
-                var service = container.GetInstance<IOrderCreatedConsumer>();
+                var service = container.GetInstance<IConsumer<OrderCreated>>();
                 return new Consumer<OrderCreated>(service.Consume);
             });
         }
@@ -66,9 +66,6 @@ namespace ProductInventory.Client.Web
             repository.Create(Product.CreateWithIdAndQuantity("bf75aa45-6e94-4655-98f8-6885bf3d1393", 5));
             
             container.GetInstance<Consumer<OrderCreated>>().Consume();
-            
-            
-            
             
             app.UseRouting();
             app.UseAuthorization();

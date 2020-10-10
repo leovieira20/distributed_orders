@@ -1,16 +1,12 @@
 using System;
 using Common.Messaging.RabbitMq;
 using ProductInventory.Domain.Events;
+using ProductInventory.Domain.Exceptions;
 using ProductInventory.Domain.Services;
 
 namespace ProductInventory.Domain.Consumers
 {
-    public interface IOrderCreatedConsumer
-    {
-        void Consume(OrderCreated message);
-    }
-
-    public class OrderCreatedConsumer : IOrderCreatedConsumer
+    public class OrderCreatedConsumer : IConsumer<OrderCreated>
     {
         private readonly IStockChecker _stockChecker;
         private readonly ISystemBus _systemBus;
@@ -21,17 +17,17 @@ namespace ProductInventory.Domain.Consumers
             _systemBus = systemBus;
         }
 
-        public void Consume(OrderCreated message)
+        public async void Consume(OrderCreated message)
         {
             try
             {
-                _stockChecker.ReserveStockForItems(message.Order.Items);
-                _systemBus.PostAsync(new OrderConfirmed { OrderId = message.Order.Id });
+                await _stockChecker.ReserveStockForItems(message.Order.Items);
+                _systemBus.PostAsync(new OrderConfirmed { OrderId = message.Order.OrderId });
             }
-            catch (Exception e)
+            catch (NotEnoughStockForItemException e)
             {
                 Console.WriteLine(e);
-                _systemBus.PostAsync(new OrderRefused { OrderId = message.Order.Id });
+                _systemBus.PostAsync(new OrderRefused { OrderId = message.Order.OrderId });
             }
         }
     }

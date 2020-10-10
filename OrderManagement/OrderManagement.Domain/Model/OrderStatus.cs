@@ -4,6 +4,8 @@ namespace OrderManagement.Domain.Model
     {
         Created,
         Cancelled,
-        Fulfilled
+        Fulfilled,
+        Confirmed,
+        Refused
     }
 }

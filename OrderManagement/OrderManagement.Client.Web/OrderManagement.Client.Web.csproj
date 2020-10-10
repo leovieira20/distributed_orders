@@ -10,5 +10,10 @@
       <ProjectReference Include="..\OrderManagement.Repository.Mongo\OrderManagement.Repository.Mongo.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="SimpleInjector.Integration.AspNetCore" Version="5.1.0" />
+      <PackageReference Include="SimpleInjector.Integration.AspNetCore.Mvc.Core" Version="5.0.0" />
+    </ItemGroup>
+
 
 </Project>

@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ProductInventory.Domain.Exceptions;
 using ProductInventory.Domain.Model;
 using ProductInventory.Domain.Repository;
 
@@ -40,15 +40,5 @@ namespace ProductInventory.Domain.Services
                 await _repository.Update(p);
             }
         }
-    }
-
-    public class NotEnoughStockForItemException : Exception
-    {
-        public NotEnoughStockForItemException(string productId)
-        {
-            ProductId = productId;
-        }
-        
-        public string ProductId { get; }
     }
 }

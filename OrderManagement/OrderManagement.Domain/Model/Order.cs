@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using MongoDB.Bson;
 
 namespace OrderManagement.Domain.Model
 {
@@ -7,11 +8,12 @@ namespace OrderManagement.Domain.Model
     {
         public Order()
         {
-            Id = Guid.NewGuid().ToString();
+            OrderId = Guid.NewGuid().ToString();
             Status = OrderStatus.Created;
         }
-        
-        public string Id { get; set; }
+
+        public ObjectId _id { get; set; }
+        public string OrderId { get; set; }
         public OrderStatus Status { get; set; }
         public Address DeliveryAddress { get; set; }
         public IEnumerable<OrderItem> Items { get; set; }

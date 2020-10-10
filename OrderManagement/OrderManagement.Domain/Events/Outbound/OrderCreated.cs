@@ -1,7 +1,7 @@
 ﻿using Common.Messaging.RabbitMq;
 using OrderManagement.Domain.Model;
 
-namespace OrderManagement.Domain.Events
+namespace OrderManagement.Domain.Events.Outbound
 {
     public class OrderCreated : IEvent
     {
