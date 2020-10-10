@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
-namespace OrderList.Messaging.RabbitMq
+namespace Common.Messaging.RabbitMq
 {
     public class Consumer<T>
     {

@@ -1,20 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Common.Messaging.RabbitMq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Linq;
-using OrderList.Domain.Models;
 using OrderList.Domain.Repositories;
 using OrderList.Domain.Services;
-using OrderList.Messaging.RabbitMq;
+using OrderList.Domain.Consumers;
 using OrderList.Repository.Redis;
 using SimpleInjector;
 
@@ -46,15 +39,15 @@ namespace OrderList.Client.Web
         private void InitializeContainer()
         {
             container.RegisterSingleton<IOrderRepository, RedisOrderRepository>();
+            container.RegisterSingleton<IOrderCreatedConsumer, OrderCreatedConsumer>();
             container.RegisterSingleton<IOrderService, OrderService>();
             container.RegisterSingleton(() =>
             {
-                var service = container.GetInstance<IOrderService>();
+                var service = container.GetInstance<IOrderCreatedConsumer>();
                 return new Consumer<JObject>(service.Create);
             });
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseSimpleInjector(container);
@@ -65,8 +58,7 @@ namespace OrderList.Client.Web
             }
             
             container.GetInstance<Consumer<JObject>>().Consume();
-
-            app.UseHttpsRedirection();
+            
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
