@@ -39,7 +39,7 @@ namespace OrderManagement.Client.Web.Controllers
             return Ok();
         }
 
-        [HttpPut("[action]{id}")]
+        [HttpPut("[action]/{id}")]
         public async Task<IActionResult> UpdateOrderItems(string id, [FromBody] IEnumerable<OrderItem> items)
         {
             await _service.UpdateOrderItemsAsync(id, items);

@@ -44,8 +44,9 @@ namespace OrderManagement.Domain.Services
         
         public async Task UpdateOrderItemsAsync(string id, IEnumerable<OrderItem> items)
         {
-            await _repository.UpdateOrderItemsAsync(id, items);
-            await _bus.PostAsync(new OrderItemsUpdated());
+            var existingOrder = await _repository.GetAsync(id);
+            var updatedOrder = await _repository.UpdateOrderItemsAsync(id, items);
+            await _bus.PostAsync(new OrderItemsUpdated { NewItems = updatedOrder.Items, OldItems = existingOrder.Items });
         }
 
         public async Task CancelOrderAsync(string id)

@@ -19,12 +19,34 @@ namespace OrderManagement.Repository.Mongo
             _collection = _client
                 .GetDatabase(dbName)
                 .GetCollection<Order>("orders");
-        }    
-        
+        }
+
+        public async Task<Order> GetAsync(string id)
+        {
+            try
+            {
+                var result = await _collection.FindAsync(o => o.OrderId == id);
+                return result.FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         public async Task CreateAsync(Order order)
         {
-            await _collection
-                .InsertOneAsync(order);
+            try
+            {
+                await _collection
+                    .InsertOneAsync(order);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public async Task<Order> CancelOrderAsync(string id)
@@ -59,9 +81,20 @@ namespace OrderManagement.Repository.Mongo
             }
         }
 
-        public Task UpdateOrderItemsAsync(string id, IEnumerable<OrderItem> items)
+        public async Task<Order> UpdateOrderItemsAsync(string id, IEnumerable<OrderItem> items)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var filter = new ExpressionFilterDefinition<Order>(p => p.OrderId == id);
+                var update = new UpdateDefinitionBuilder<Order>().Set(p => p.Items, items);
+
+                return await _collection.FindOneAndUpdateAsync<Order>(filter, update);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
         
         public async Task ConfirmOrderAsync(string orderId)
