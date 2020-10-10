@@ -27,14 +27,14 @@ namespace OrderManagement.Repository.Mongo
                 .InsertOneAsync(order);
         }
 
-        public async Task CancelOrderAsync(string id)
+        public async Task<Order> CancelOrderAsync(string id)
         {
             try
             {
                 var filter = new ExpressionFilterDefinition<Order>(p => p.OrderId == id);
                 var update = new UpdateDefinitionBuilder<Order>().Set(p => p.Status, OrderStatus.Cancelled);
 
-                await _collection.FindOneAndUpdateAsync<Order>(filter, update);
+                return await _collection.FindOneAndUpdateAsync<Order>(filter, update);
             }
             catch (Exception e)
             {
@@ -43,9 +43,20 @@ namespace OrderManagement.Repository.Mongo
             }
         }
 
-        public Task UpdateDeliveryAddressAsync(string id, Address newAddress)
+        public async Task UpdateDeliveryAddressAsync(string id, Address newAddress)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var filter = new ExpressionFilterDefinition<Order>(p => p.OrderId == id);
+                var update = new UpdateDefinitionBuilder<Order>().Set(p => p.DeliveryAddress, newAddress);
+
+                await _collection.FindOneAndUpdateAsync<Order>(filter, update);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public Task UpdateOrderItemsAsync(string id, IEnumerable<OrderItem> items)

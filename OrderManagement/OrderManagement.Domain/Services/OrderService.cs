@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Common.Messaging.RabbitMq;
-using OrderManagement.Domain.Events;
 using OrderManagement.Domain.Events.Inbound;
 using OrderManagement.Domain.Events.Outbound;
 using OrderManagement.Domain.Model;
@@ -41,7 +39,7 @@ namespace OrderManagement.Domain.Services
         public async Task UpdateDeliveryAddressAsync(string id, Address newAddress)
         {
             await _repository.UpdateDeliveryAddressAsync(id, newAddress);
-            await _bus.PostAsync(new DeliveryAddressUpdated());
+            await _bus.PostAsync(new DeliveryAddressUpdated { OrderId = id, NewAddress = newAddress });
         }
         
         public async Task UpdateOrderItemsAsync(string id, IEnumerable<OrderItem> items)
@@ -52,13 +50,8 @@ namespace OrderManagement.Domain.Services
 
         public async Task CancelOrderAsync(string id)
         {
-            await _repository.CancelOrderAsync(id);
-            await _bus.PostAsync(new OrderCancelled());
-        }
-
-        public Task FulfillOrderAsync()
-        {
-            throw new NotImplementedException();
+            var order = await _repository.CancelOrderAsync(id);
+            await _bus.PostAsync(new OrderCancelled { Order = order });
         }
     }
 }

@@ -42,15 +42,8 @@ namespace OrderManagement.Client.Web
             container.RegisterSingleton<ISystemBus, Producer>();
             container.RegisterSingleton<IOrderRepository, MongoOrderRepository>();
             container.RegisterSingleton<IOrderService, OrderService>();
-            container.RegisterSingleton<IConsumer<OrderCancelled>, OrderCancelledConsumer>();
             container.RegisterSingleton<IConsumer<OrderConfirmed>, OrderConfirmedConsumer>();
             container.RegisterSingleton<IConsumer<OrderRefused>, OrderRefusedConsumer>();
-            container.RegisterSingleton(() =>
-            {
-                var service = container.GetInstance<IConsumer<OrderCancelled>>();
-                return new Consumer<OrderCancelled>(service.Consume);
-            });
-            
             container.RegisterSingleton(() =>
             {
                 var service = container.GetInstance<IConsumer<OrderConfirmed>>();
@@ -72,7 +65,6 @@ namespace OrderManagement.Client.Web
                 app.UseDeveloperExceptionPage();
             }
             
-            container.GetInstance<Consumer<OrderCancelled>>().Consume();
             container.GetInstance<Consumer<OrderConfirmed>>().Consume();
             container.GetInstance<Consumer<OrderRefused>>().Consume();
             

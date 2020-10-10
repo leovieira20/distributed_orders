@@ -1,8 +1,10 @@
-﻿namespace OrderManagement.Domain.Model
+﻿using MongoDB.Bson;
+
+namespace OrderManagement.Domain.Model
 {
     public class Address
     {
-        public string Id { get; set; }
+        public ObjectId _id { get; set; }
         public string Street { get; set; }
     }
 }

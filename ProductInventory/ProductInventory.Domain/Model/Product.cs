@@ -25,6 +25,12 @@ namespace ProductInventory.Domain.Model
             AvailableQuantity -= quantity;
             ReservedQuantity += quantity;
         }
+        
+        public void ReleaseQuantity(int quantity)
+        {
+            AvailableQuantity += quantity;
+            ReservedQuantity -= quantity;
+        }
 
         public ObjectId _id { get; set; }
         public string ProductId { get; set; }
