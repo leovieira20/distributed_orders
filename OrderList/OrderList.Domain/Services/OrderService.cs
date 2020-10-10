@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using OrderList.Domain.Models;
 using OrderList.Domain.Repositories;
@@ -8,7 +7,7 @@ namespace OrderList.Domain.Services
 {
     public interface IOrderService
     {
-        Task<Order> GetAsync(Guid id);
+        Task<Order> GetAsync(string id);
         Task<IEnumerable<Order>> GetAsync(int page, int size);
     }
 
@@ -21,7 +20,7 @@ namespace OrderList.Domain.Services
             _repository = repository;
         }
         
-        public async Task<Order> GetAsync(Guid id)
+        public async Task<Order> GetAsync(string id)
         {
             return await _repository.GetAsync(id);
         }

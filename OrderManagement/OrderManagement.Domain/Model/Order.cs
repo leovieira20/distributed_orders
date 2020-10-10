@@ -7,10 +7,11 @@ namespace OrderManagement.Domain.Model
     {
         public Order()
         {
+            Id = Guid.NewGuid().ToString();
             Status = OrderStatus.Created;
         }
         
-        public Guid Id { get; set; }
+        public string Id { get; set; }
         public OrderStatus Status { get; set; }
         public Address DeliveryAddress { get; set; }
         public IEnumerable<OrderItem> Items { get; set; }

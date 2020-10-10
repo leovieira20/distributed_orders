@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Common.Messaging.RabbitMq;
 using OrderManagement.Domain.Events;
-using OrderManagement.Domain.Messaging;
 using OrderManagement.Domain.Model;
 using OrderManagement.Domain.Repositories;
 
@@ -11,9 +11,9 @@ namespace OrderManagement.Domain.Services
     public interface IOrderService
     {
         Task CreateAsync(Order order);
-        Task UpdateDeliveryAddressAsync(Guid id, Address newAddress);
-        Task UpdateOrderItemsAsync(Guid id, IEnumerable<OrderItem> items);
-        Task CancelOrderAsync(Guid id);
+        Task UpdateDeliveryAddressAsync(string id, Address newAddress);
+        Task UpdateOrderItemsAsync(string id, IEnumerable<OrderItem> items);
+        Task CancelOrderAsync(string id);
     }
 
     public class OrderService : IOrderService
@@ -36,19 +36,19 @@ namespace OrderManagement.Domain.Services
             });
         }
 
-        public async Task UpdateDeliveryAddressAsync(Guid id, Address newAddress)
+        public async Task UpdateDeliveryAddressAsync(string id, Address newAddress)
         {
             await _repository.UpdateDeliveryAddress(id, newAddress);
             await _bus.PostAsync(new DeliveryAddressUpdated());
         }
         
-        public async Task UpdateOrderItemsAsync(Guid id, IEnumerable<OrderItem> items)
+        public async Task UpdateOrderItemsAsync(string id, IEnumerable<OrderItem> items)
         {
             await _repository.UpdateOrderItems(id, items);
             await _bus.PostAsync(new OrderItemsUpdated());
         }
 
-        public async Task CancelOrderAsync(Guid id)
+        public async Task CancelOrderAsync(string id)
         {
             await _repository.CancelOrderAsync(id);
             await _bus.PostAsync(new OrderCancelled());

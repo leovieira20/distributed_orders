@@ -9,18 +9,17 @@ namespace OrderList.Repository.Redis
 {
     public class RedisOrderRepository : IOrderRepository
     {
-        private readonly RedisManagerPool _manager;
         private readonly IRedisClient _client;
 
         public RedisOrderRepository()
         {
-            _manager = new RedisManagerPool("localhost:6379");
-            _client = _manager.GetClient();
+            var manager = new RedisManagerPool("localhost:6379");
+            _client = manager.GetClient();
         }
 
-        public Task<Order> GetAsync(Guid id)
+        public Task<Order> GetAsync(string id)
         {
-            return Task.FromResult(_client.As<Order>().GetById(id.ToString()));
+            return Task.FromResult(_client.As<Order>().GetById(id));
         }
 
         public Task<IEnumerable<Order>> GetAsync(int page, int size)

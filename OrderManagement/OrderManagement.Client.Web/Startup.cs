@@ -1,12 +1,11 @@
+using Common.Messaging.RabbitMq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using OrderManagement.Domain.Messaging;
 using OrderManagement.Domain.Repositories;
 using OrderManagement.Domain.Services;
-using OrderManagement.Messaging.RabbitMQ;
 using OrderManagement.Repository.Mongo;
 
 namespace OrderManagement.Client.Web
@@ -26,7 +25,7 @@ namespace OrderManagement.Client.Web
             services.AddControllers();
             services.AddSingleton<IOrderService, OrderService>();
             services.AddSingleton<IOrderRepository, MongoOrderRepository>();
-            services.AddSingleton<ISystemBus, RabbitMQSystemBus>();
+            services.AddSingleton<ISystemBus, Producer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

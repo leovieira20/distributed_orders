@@ -8,9 +8,9 @@ namespace OrderManagement.Domain.Repositories
     public interface IOrderRepository
     {
         Task CreateAsync(Order order);
-        Task CancelOrderAsync(Guid id);
-        Task UpdateDeliveryAddress(Guid id, Address newAddress);
-        Task UpdateOrderItems(Guid id, IEnumerable<OrderItem> items);
-        Task<Product> GetProduct(Guid id);
+        Task CancelOrderAsync(string id);
+        Task UpdateDeliveryAddress(string id, Address newAddress);
+        Task UpdateOrderItems(string id, IEnumerable<OrderItem> items);
+        Task<Product> GetProduct(string id);
     }
 }

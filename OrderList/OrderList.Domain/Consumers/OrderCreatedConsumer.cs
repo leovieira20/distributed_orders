@@ -1,13 +1,12 @@
 using System;
-using Newtonsoft.Json.Linq;
-using OrderList.Domain.Models;
+using OrderList.Domain.Events;
 using OrderList.Domain.Repositories;
 
 namespace OrderList.Domain.Consumers
 {
     public interface IOrderCreatedConsumer
     {
-        void Create(JObject message);
+        void Create(OrderCreated message);
     }
 
     public class OrderCreatedConsumer : IOrderCreatedConsumer
@@ -19,12 +18,11 @@ namespace OrderList.Domain.Consumers
             _repository = repository;
         }
         
-        public void Create(JObject message)
+        public void Create(OrderCreated message)
         {
             try
             {
-                var order = message.Value<JObject>("Order").ToObject<Order>();
-                _repository.CreateAsync(order);
+                _repository.CreateAsync(message.Order);
             }
             catch (Exception e)
             {

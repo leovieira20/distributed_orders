@@ -8,5 +8,15 @@
       <Folder Include="Controllers" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="SimpleInjector.Integration.AspNetCore" Version="5.1.0" />
+      <PackageReference Include="SimpleInjector.Integration.AspNetCore.Mvc.Core" Version="5.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ProductInventory.Domain\ProductInventory.Domain.csproj" />
+      <ProjectReference Include="..\ProductInventory.Repository.Mongo\ProductInventory.Repository.Mongo.csproj" />
+    </ItemGroup>
+
 
 </Project>

@@ -26,21 +26,21 @@ namespace OrderManagement.Client.Web.Controllers
         }
 
         [HttpDelete("[action]")]
-        public async Task<IActionResult> Cancel([FromBody] Guid id)
+        public async Task<IActionResult> Cancel([FromBody] string id)
         {
             await _service.CancelOrderAsync(id);
             return Ok();
         }
 
         [HttpPut("[action]/{id}")]
-        public async Task<IActionResult> UpdateDeliveryAddress([FromQuery] Guid id, [FromBody] Address newAddress)
+        public async Task<IActionResult> UpdateDeliveryAddress([FromQuery] string id, [FromBody] Address newAddress)
         {
             await _service.UpdateDeliveryAddressAsync(id, newAddress);
             return Ok();
         }
 
         [HttpPut("[action]{id}")]
-        public async Task<IActionResult> UpdateOrderItems([FromQuery] Guid id, [FromBody] IEnumerable<OrderItem> items)
+        public async Task<IActionResult> UpdateOrderItems([FromQuery] string id, [FromBody] IEnumerable<OrderItem> items)
         {
             await _service.UpdateOrderItemsAsync(id, items);
             return Ok();

@@ -17,7 +17,7 @@ namespace OrderList.Client.Web.Controllers
         }
         
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
+        public async Task<IActionResult> Get(string id)
         {
             return Ok(await _service.GetAsync(id));
         }

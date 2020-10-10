@@ -27,22 +27,22 @@ namespace OrderManagement.Repository.Mongo
                 .InsertOneAsync(order);
         }
 
-        public Task CancelOrderAsync(Guid id)
+        public Task CancelOrderAsync(string id)
         {
             throw new NotImplementedException();
         }
 
-        public Task UpdateDeliveryAddress(Guid id, Address newAddress)
+        public Task UpdateDeliveryAddress(string id, Address newAddress)
         {
             throw new NotImplementedException();
         }
 
-        public Task UpdateOrderItems(Guid id, IEnumerable<OrderItem> items)
+        public Task UpdateOrderItems(string id, IEnumerable<OrderItem> items)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Product> GetProduct(Guid id)
+        public Task<Product> GetProduct(string id)
         {
             throw new NotImplementedException();
         }

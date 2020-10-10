@@ -4,8 +4,13 @@ namespace OrderManagement.Domain.Model
 {
     public class OrderItem
     {
-        public Guid Id { get; set; }
-        public Guid ProductId { get; set; }
-        public int quantity { get; set; }
+        public OrderItem()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
+        
+        public string Id { get; set; }
+        public string ProductId { get; set; }
+        public int Quantity { get; set; }
     }
 }

@@ -12,10 +12,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Models" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\..\OrderManagement\OrderManagement.Domain\OrderManagement.Domain.csproj" />
     </ItemGroup>
 

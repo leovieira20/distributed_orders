@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Common.Messaging.RabbitMq;
 using Moq;
-using OrderManagement.Domain.Messaging;
 using OrderManagement.Domain.Model;
 using OrderManagement.Domain.Repositories;
 using OrderManagement.Domain.Services;
@@ -49,14 +49,14 @@ namespace ProductInventory.Domain.Tests.Services
         public void AProductWithEnoughStock()
         {
             _repository
-                .Setup(x => x.GetProduct(It.IsAny<Guid>()))
+                .Setup(x => x.GetProduct(It.IsAny<string>()))
                 .ReturnsAsync(ProductFactory.CreateWithStock());
         }
 
         public void AProductWithInsufficientStock()
         {
             _repository
-                .Setup(x => x.GetProduct(It.IsAny<Guid>()))
+                .Setup(x => x.GetProduct(It.IsAny<string>()))
                 .ReturnsAsync(ProductFactory.CreateWithoutStock());
         }
 

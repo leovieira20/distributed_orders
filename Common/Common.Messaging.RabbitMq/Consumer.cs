@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using System.Text;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
@@ -6,28 +7,26 @@ using RabbitMQ.Client.Events;
 
 namespace Common.Messaging.RabbitMq
 {
-    public class Consumer<T>
+    public class Consumer<T> where T : IEvent
     {
         private readonly Action<T> _handler;
-        private const string ExchangeName = "orderCreated";
-        private readonly ConnectionFactory _factory;
-        private IConnection _connection;
-        private IModel _channel;
+        private readonly IModel _channel;
 
         public Consumer(Action<T> handler)
         {
             _handler = handler;
-            _factory = new ConnectionFactory { HostName = "localhost" };
-            _connection = _factory.CreateConnection();
-            _channel = _connection.CreateModel();
+            var factory = new ConnectionFactory { HostName = "localhost" };
+            var connection = factory.CreateConnection();
+            _channel = connection.CreateModel();
         }
 
         public void Consume()
         {
+            var exchangeName = typeof(T).GetProperty(nameof(IEvent.Name), BindingFlags.Public | BindingFlags.Static)?.GetValue(null)?.ToString();
             var queueName = _channel.QueueDeclare().QueueName;
             _channel.QueueBind(
                 queue: queueName,
-                exchange: ExchangeName,
+                exchange: exchangeName,
                 routingKey: "");
 
             var consumer = new EventingBasicConsumer(_channel);

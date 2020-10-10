@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using OrderList.Domain.Repositories;
 using OrderList.Domain.Services;
 using OrderList.Domain.Consumers;
+using OrderList.Domain.Events;
 using OrderList.Repository.Redis;
 using SimpleInjector;
 
@@ -44,7 +45,7 @@ namespace OrderList.Client.Web
             container.RegisterSingleton(() =>
             {
                 var service = container.GetInstance<IOrderCreatedConsumer>();
-                return new Consumer<JObject>(service.Create);
+                return new Consumer<OrderCreated>(service.Create);
             });
         }
         
@@ -57,7 +58,7 @@ namespace OrderList.Client.Web
                 app.UseDeveloperExceptionPage();
             }
             
-            container.GetInstance<Consumer<JObject>>().Consume();
+            container.GetInstance<Consumer<OrderCreated>>().Consume();
             
             app.UseRouting();
             app.UseAuthorization();
