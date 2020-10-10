@@ -1,6 +1,6 @@
 using Common.Messaging.RabbitMq;
 
-namespace ProductInventory.Domain.Events
+namespace ProductInventory.Domain.Events.Outbound
 {
     public class OrderRefused : IEvent
     {

@@ -1,4 +1,3 @@
-using System;
 using Common.Messaging.RabbitMq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ProductInventory.Domain.Consumers;
-using ProductInventory.Domain.Events;
+using ProductInventory.Domain.Events.Inbound;
 using ProductInventory.Domain.Model;
 using ProductInventory.Domain.Repository;
 using ProductInventory.Domain.Services;
@@ -45,6 +44,7 @@ namespace ProductInventory.Client.Web
             container.RegisterSingleton<IStockChecker, StockChecker>();
             container.RegisterSingleton<IConsumer<OrderCreated>, OrderCreatedConsumer>();
             container.RegisterSingleton<IConsumer<OrderCancelled>, OrderCancelledConsumer>();
+            container.RegisterSingleton<IConsumer<OrderItemsUpdated>, OrderItemsUpdatedConsumer>();
             container.RegisterSingleton(() =>
             {
                 var service = container.GetInstance<IConsumer<OrderCreated>>();
@@ -54,6 +54,11 @@ namespace ProductInventory.Client.Web
             {
                 var service = container.GetInstance<IConsumer<OrderCancelled>>();
                 return new Consumer<OrderCancelled>(service.Consume);
+            });
+            container.RegisterSingleton(() =>
+            {
+                var service = container.GetInstance<IConsumer<OrderItemsUpdated>>();
+                return new Consumer<OrderItemsUpdated>(service.Consume);
             });
         }
         
@@ -73,6 +78,7 @@ namespace ProductInventory.Client.Web
             
             container.GetInstance<Consumer<OrderCreated>>().Consume();
             container.GetInstance<Consumer<OrderCancelled>>().Consume();
+            container.GetInstance<Consumer<OrderItemsUpdated>>().Consume();
 
             app.UseRouting();
             app.UseAuthorization();

@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MongoDB.Bson;
 using MongoDB.Driver;
-using Newtonsoft.Json;
 using ProductInventory.Domain.Model;
 using ProductInventory.Domain.Repository;
 
@@ -64,6 +62,34 @@ namespace ProductInventory.Repository.Mongo
             {
                 await _collection
                     .InsertOneAsync(product);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public async Task BulkUpdate(List<Product> productsToUpdate)
+        {
+            try
+            {
+                var models = new List<WriteModel<Product>>();
+
+                foreach (var product in productsToUpdate)
+                {
+                    var filter = new ExpressionFilterDefinition<Product>(p => p.ProductId == product.ProductId);
+                    var updateDefinitionList = new List<UpdateDefinition<Product>>
+                    {
+                        new UpdateDefinitionBuilder<Product>().Set(p => p.AvailableQuantity, product.AvailableQuantity),
+                        new UpdateDefinitionBuilder<Product>().Set(p => p.ReservedQuantity, product.ReservedQuantity)
+                    };
+                    
+                    var action = new UpdateOneModel<Product>(filter, Builders<Product>.Update.Combine(updateDefinitionList));
+                    models.Add(action);
+                }
+                
+                await _collection.BulkWriteAsync(models);
             }
             catch (Exception e)
             {

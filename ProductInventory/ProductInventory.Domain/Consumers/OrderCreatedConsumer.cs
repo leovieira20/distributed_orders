@@ -1,6 +1,8 @@
 using System;
 using Common.Messaging.RabbitMq;
 using ProductInventory.Domain.Events;
+using ProductInventory.Domain.Events.Inbound;
+using ProductInventory.Domain.Events.Outbound;
 using ProductInventory.Domain.Exceptions;
 using ProductInventory.Domain.Services;
 

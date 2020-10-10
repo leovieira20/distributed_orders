@@ -6,7 +6,7 @@ namespace OrderManagement.Domain.Events.Outbound
 {
     public class OrderItemsUpdated : IEvent
     {
-        public static string Name => nameof(OrderCreated);
+        public static string Name => nameof(OrderItemsUpdated);
         public IEnumerable<OrderItem> OldItems { get; set; }
         public IEnumerable<OrderItem> NewItems { get; set; }
     }

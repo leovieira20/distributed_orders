@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ProductInventory.Domain.Model;
 
@@ -8,5 +9,6 @@ namespace ProductInventory.Domain.Repository
         Task<Product> Get(string id);
         Task Update(Product product);
         Task Create(Product product);
+        Task BulkUpdate(List<Product> productsToUpdate);
     }
 }

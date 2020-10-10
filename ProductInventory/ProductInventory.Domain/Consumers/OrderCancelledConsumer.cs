@@ -1,6 +1,7 @@
 using System;
 using Common.Messaging.RabbitMq;
 using ProductInventory.Domain.Events;
+using ProductInventory.Domain.Events.Inbound;
 using ProductInventory.Domain.Repository;
 
 namespace ProductInventory.Domain.Consumers
