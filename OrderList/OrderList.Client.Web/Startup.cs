@@ -51,6 +51,7 @@ namespace OrderList.Client.Web
             container.RegisterSingleton<ConsumerWrapper<OrderConfirmed>>();
             container.RegisterSingleton<ConsumerWrapper<OrderRefused>>();
             container.RegisterSingleton<ConsumerWrapper<OrderCancelled>>();
+            container.RegisterSingleton<ConsumerWrapper<DeliveryAddressUpdated>>();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
