@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using OrderManagement.Domain.Model;
@@ -10,12 +11,16 @@ namespace OrderManagement.Repository.Mongo
 {
     public class MongoOrderRepository : IOrderRepository
     {
+        private readonly ILogger<MongoOrderRepository> _logger;
         private readonly string dbName = "distributed_orders";
         private readonly MongoClient _client;
         private readonly IMongoCollection<Order> _collection;
 
-        public MongoOrderRepository(IOptions<MongoConfiguration> options)
+        public MongoOrderRepository(
+            ILogger<MongoOrderRepository> logger,
+            IOptions<MongoConfiguration> options)
         {
+            _logger = logger;
             var config = options.Value;
             _client = new MongoClient($"mongodb://{config.Host}:{config.Port}/{dbName}");
             _collection = _client
@@ -32,7 +37,7 @@ namespace OrderManagement.Repository.Mongo
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, $"Error trying to access mongo, method: {nameof(IMongoCollection<Order>.FindAsync)}");
                 throw;
             }
         }
@@ -46,7 +51,7 @@ namespace OrderManagement.Repository.Mongo
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, $"Error trying to access mongo, method: {nameof(IMongoCollection<Order>.InsertOneAsync)}");
                 throw;
             }
         }
@@ -62,7 +67,7 @@ namespace OrderManagement.Repository.Mongo
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, $"Error trying to access mongo, method: {nameof(IMongoCollection<Order>.FindOneAndUpdateAsync)}");
                 throw;
             }
         }
@@ -94,11 +99,11 @@ namespace OrderManagement.Repository.Mongo
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, $"Error trying to access mongo, method: {nameof(IMongoCollection<Order>.FindOneAndUpdateAsync)}");
                 throw;
             }
         }
-        
+
         public async Task ConfirmOrderAsync(string orderId)
         {
             try
@@ -110,7 +115,7 @@ namespace OrderManagement.Repository.Mongo
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, $"Error trying to access mongo, method: {nameof(IMongoCollection<Order>.FindOneAndUpdateAsync)}");
                 throw;
             }
         }
@@ -126,7 +131,7 @@ namespace OrderManagement.Repository.Mongo
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, $"Error trying to access mongo, method: {nameof(IMongoCollection<Order>.FindOneAndUpdateAsync)}");
                 throw;
             }
         }

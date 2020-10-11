@@ -1,5 +1,6 @@
 using System;
 using Common.Messaging.RabbitMq;
+using Microsoft.Extensions.Logging;
 using OrderManagement.Domain.Events.Inbound;
 using OrderManagement.Domain.Repositories;
 
@@ -7,10 +8,14 @@ namespace OrderManagement.Domain.Consumers
 {
     public class OrderConfirmedConsumer : IConsumer<OrderConfirmed>
     {
+        private readonly ILogger<OrderConfirmedConsumer> _logger;
         private readonly IOrderRepository _repository;
 
-        public OrderConfirmedConsumer(IOrderRepository repository)
+        public OrderConfirmedConsumer(
+            ILogger<OrderConfirmedConsumer> logger,
+            IOrderRepository repository)
         {
+            _logger = logger;
             _repository = repository;
         }
 
@@ -22,7 +27,7 @@ namespace OrderManagement.Domain.Consumers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, "Error while trying to confirm order");
                 throw;
             }
         }
