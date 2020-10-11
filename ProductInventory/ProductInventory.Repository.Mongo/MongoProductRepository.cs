@@ -43,6 +43,20 @@ namespace ProductInventory.Repository.Mongo
             }
         }
 
+        public async Task<List<Product>> GetAll()
+        {
+            try
+            {
+                var cursor = await _collection.FindAsync(Builders<Product>.Filter.Empty);
+                return await cursor.ToListAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, $"Error trying to access mongo, method: {nameof(IMongoCollection<Order>.FindAsync)}");
+                throw;
+            }
+        }
+
         public async Task Update(Product product)
         {
             try
