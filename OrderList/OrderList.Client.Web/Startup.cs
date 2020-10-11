@@ -46,31 +46,10 @@ namespace OrderList.Client.Web
             container.RegisterSingleton<IConsumer<OrderCancelled>, OrderCancelledConsumer>();
             container.RegisterSingleton<IConsumer<DeliveryAddressUpdated>, DeliverAddressUpdatedConsumer>();
             container.RegisterSingleton<IOrderService, OrderService>();
-            container.RegisterSingleton(() =>
-            {
-                var service = container.GetInstance<IConsumer<OrderCreated>>();
-                return new Consumer<OrderCreated>(service.Consume);
-            });
-            container.RegisterSingleton(() =>
-            {
-                var service = container.GetInstance<IConsumer<DeliveryAddressUpdated>>();
-                return new Consumer<DeliveryAddressUpdated>(service.Consume);
-            });
-            container.RegisterSingleton(() =>
-            {
-                var service = container.GetInstance<IConsumer<OrderConfirmed>>();
-                return new Consumer<OrderConfirmed>(service.Consume);
-            });
-            container.RegisterSingleton(() =>
-            {
-                var service = container.GetInstance<IConsumer<OrderRefused>>();
-                return new Consumer<OrderRefused>(service.Consume);
-            });
-            container.RegisterSingleton(() =>
-            {
-                var service = container.GetInstance<IConsumer<OrderCancelled>>();
-                return new Consumer<OrderCancelled>(service.Consume);
-            });
+            container.RegisterSingleton<ConsumerWrapper<OrderCreated>>();
+            container.RegisterSingleton<ConsumerWrapper<OrderConfirmed>>();
+            container.RegisterSingleton<ConsumerWrapper<OrderRefused>>();
+            container.RegisterSingleton<ConsumerWrapper<OrderCancelled>>();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -82,11 +61,11 @@ namespace OrderList.Client.Web
                 app.UseDeveloperExceptionPage();
             }
 
-            container.GetInstance<Consumer<OrderCreated>>().Consume();
-            container.GetInstance<Consumer<OrderConfirmed>>().Consume();
-            container.GetInstance<Consumer<OrderRefused>>().Consume();
-            container.GetInstance<Consumer<OrderCancelled>>().Consume();
-            container.GetInstance<Consumer<DeliveryAddressUpdated>>().Consume();
+            container.GetInstance<ConsumerWrapper<OrderCreated>>().Consume();
+            container.GetInstance<ConsumerWrapper<OrderConfirmed>>().Consume();
+            container.GetInstance<ConsumerWrapper<OrderRefused>>().Consume();
+            container.GetInstance<ConsumerWrapper<OrderCancelled>>().Consume();
+            container.GetInstance<ConsumerWrapper<DeliveryAddressUpdated>>().Consume();
             
             app.UseRouting();
             app.UseAuthorization();

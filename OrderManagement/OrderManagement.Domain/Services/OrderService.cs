@@ -39,7 +39,7 @@ namespace OrderManagement.Domain.Services
             try
             {
                 await _repository.CreateAsync(order);
-                await _bus.PostAsync(new OrderCreated
+                _bus.Post(new OrderCreated
                 {
                     Order = order
                 });
@@ -56,7 +56,7 @@ namespace OrderManagement.Domain.Services
             try
             {
                 await _repository.UpdateDeliveryAddressAsync(id, newAddress);
-                await _bus.PostAsync(new DeliveryAddressUpdated { OrderId = id, NewAddress = newAddress });
+                _bus.Post(new DeliveryAddressUpdated { OrderId = id, NewAddress = newAddress });
             }
             catch (Exception e)
             {
@@ -72,7 +72,7 @@ namespace OrderManagement.Domain.Services
                 var existingOrder = await _repository.GetAsync(id);
                 await _repository.UpdateOrderItemsAsync(id, items);
                 var updatedOrder = await _repository.GetAsync(id);
-                await _bus.PostAsync(new OrderItemsUpdated { NewItems = updatedOrder.Items, OldItems = existingOrder.Items });
+                _bus.Post(new OrderItemsUpdated { NewItems = updatedOrder.Items, OldItems = existingOrder.Items });
             }
             catch (Exception e)
             {
@@ -86,7 +86,7 @@ namespace OrderManagement.Domain.Services
             try
             {
                 var order = await _repository.CancelOrderAsync(id);
-                await _bus.PostAsync(new OrderCancelled { Order = order });
+                _bus.Post(new OrderCancelled { Order = order });
             }
             catch (Exception e)
             {

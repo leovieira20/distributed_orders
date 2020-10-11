@@ -30,12 +30,12 @@ namespace ProductInventory.Domain.Consumers
             try
             {
                 await _stockChecker.ReserveStockForItems(message.Order.Items);
-                await _systemBus.PostAsync(new OrderConfirmed { OrderId = message.Order.OrderId });
+                _systemBus.Post(new OrderConfirmed { OrderId = message.Order.OrderId });
             }
             catch (NotEnoughStockForItemException e)
             {
                 _logger.LogWarning(e, "Error trying to reserve stock items");
-                await _systemBus.PostAsync(new OrderRefused { OrderId = message.Order.OrderId });
+                _systemBus.Post(new OrderRefused { OrderId = message.Order.OrderId });
             }
             catch (Exception e)
             {

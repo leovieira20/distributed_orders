@@ -46,21 +46,9 @@ namespace ProductInventory.Client.Web
             container.RegisterSingleton<IConsumer<OrderCreated>, OrderCreatedConsumer>();
             container.RegisterSingleton<IConsumer<OrderCancelled>, OrderCancelledConsumer>();
             container.RegisterSingleton<IConsumer<OrderItemsUpdated>, OrderItemsUpdatedConsumer>();
-            container.RegisterSingleton(() =>
-            {
-                var service = container.GetInstance<IConsumer<OrderCreated>>();
-                return new Consumer<OrderCreated>(service.Consume);
-            });
-            container.RegisterSingleton(() =>
-            {
-                var service = container.GetInstance<IConsumer<OrderCancelled>>();
-                return new Consumer<OrderCancelled>(service.Consume);
-            });
-            container.RegisterSingleton(() =>
-            {
-                var service = container.GetInstance<IConsumer<OrderItemsUpdated>>();
-                return new Consumer<OrderItemsUpdated>(service.Consume);
-            });
+            container.RegisterSingleton<ConsumerWrapper<OrderCreated>>();
+            container.RegisterSingleton<ConsumerWrapper<OrderCancelled>>();
+            container.RegisterSingleton<ConsumerWrapper<OrderItemsUpdated>>();
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -77,9 +65,9 @@ namespace ProductInventory.Client.Web
             repository.Create(Product.CreateWithIdAndQuantity("adc366bc-43c6-4420-867d-e1bb96ada786", 3));
             repository.Create(Product.CreateWithIdAndQuantity("bf75aa45-6e94-4655-98f8-6885bf3d1393", 5));
             
-            container.GetInstance<Consumer<OrderCreated>>().Consume();
-            container.GetInstance<Consumer<OrderCancelled>>().Consume();
-            container.GetInstance<Consumer<OrderItemsUpdated>>().Consume();
+            container.GetInstance<ConsumerWrapper<OrderCreated>>().Consume();
+            container.GetInstance<ConsumerWrapper<OrderCancelled>>().Consume();
+            container.GetInstance<ConsumerWrapper<OrderItemsUpdated>>().Consume();
 
             app.UseRouting();
             app.UseAuthorization();

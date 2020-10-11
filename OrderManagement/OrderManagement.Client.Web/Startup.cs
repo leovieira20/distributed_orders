@@ -23,8 +23,7 @@ namespace OrderManagement.Client.Web
         }
 
         public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
@@ -45,20 +44,10 @@ namespace OrderManagement.Client.Web
             container.RegisterSingleton<IOrderService, OrderService>();
             container.RegisterSingleton<IConsumer<OrderConfirmed>, OrderConfirmedConsumer>();
             container.RegisterSingleton<IConsumer<OrderRefused>, OrderRefusedConsumer>();
-            container.RegisterSingleton(() =>
-            {
-                var service = container.GetInstance<IConsumer<OrderConfirmed>>();
-                return new Consumer<OrderConfirmed>(service.Consume);
-            });
-            
-            container.RegisterSingleton(() =>
-            {
-                var service = container.GetInstance<IConsumer<OrderRefused>>();
-                return new Consumer<OrderRefused>(service.Consume);
-            });
+            container.RegisterSingleton<ConsumerWrapper<OrderConfirmed>>();
+            container.RegisterSingleton<ConsumerWrapper<OrderRefused>>();
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -66,8 +55,8 @@ namespace OrderManagement.Client.Web
                 app.UseDeveloperExceptionPage();
             }
             
-            container.GetInstance<Consumer<OrderConfirmed>>().Consume();
-            container.GetInstance<Consumer<OrderRefused>>().Consume();
+            container.GetInstance<ConsumerWrapper<OrderConfirmed>>().Consume();
+            container.GetInstance<ConsumerWrapper<OrderRefused>>().Consume();
             
             app.UseRouting();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });

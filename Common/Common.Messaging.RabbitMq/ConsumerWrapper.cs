@@ -1,20 +1,25 @@
 using System;
 using System.Reflection;
 using System.Text;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
 namespace Common.Messaging.RabbitMq
 {
-    public class Consumer<T> where T : IEvent
+    public class ConsumerWrapper<T> where T : IEvent
     {
-        private readonly Action<T> _handler;
+        private readonly ILogger<ConsumerWrapper<T>> _logger;
+        private readonly IConsumer<T> _consumer;
         private readonly IModel _channel;
 
-        public Consumer(Action<T> handler)
+        public ConsumerWrapper(
+            ILogger<ConsumerWrapper<T>> logger,
+            IConsumer<T> consumer)
         {
-            _handler = handler;
+            _logger = logger;
+            _consumer = consumer;
             var factory = new ConnectionFactory { HostName = "localhost" };
             var connection = factory.CreateConnection();
             _channel = connection.CreateModel();
@@ -22,7 +27,8 @@ namespace Common.Messaging.RabbitMq
 
         public void Consume()
         {
-            var exchangeName = typeof(T).GetProperty(nameof(IEvent.Name), BindingFlags.Public | BindingFlags.Static)?.GetValue(null)?.ToString();
+            var exchangeName = typeof(T).GetProperty(nameof(IEvent.Name), BindingFlags.Public | BindingFlags.Static)
+                ?.GetValue(null)?.ToString();
             var queueName = _channel.QueueDeclare().QueueName;
             _channel.QueueBind(
                 queue: queueName,
@@ -34,9 +40,16 @@ namespace Common.Messaging.RabbitMq
             {
                 var body = ea.Body.ToArray();
                 var message = Encoding.UTF8.GetString(body);
-                _handler(JsonConvert.DeserializeObject<T>(message));
+                try
+                {
+                    _consumer.Consume(JsonConvert.DeserializeObject<T>(message));
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError(e, "Error trying to execute consumer");
+                }
             };
-            
+
             _channel.BasicConsume(
                 queue: queueName,
                 autoAck: true,
