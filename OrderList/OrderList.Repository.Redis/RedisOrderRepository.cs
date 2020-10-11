@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OrderList.Domain.Models;
 using OrderList.Domain.Repositories;
@@ -9,10 +10,14 @@ namespace OrderList.Repository.Redis
 {
     public class RedisOrderRepository : IOrderRepository
     {
+        private readonly ILogger<RedisOrderRepository> _logger;
         private readonly RedisManagerPool _manager;
 
-        public RedisOrderRepository(IOptions<RedisConfiguration> options)
+        public RedisOrderRepository(
+            ILogger<RedisOrderRepository> logger,
+            IOptions<RedisConfiguration> options)
         {
+            _logger = logger;
             var config = options.Value; 
             _manager = new RedisManagerPool($"{config.Host}:{config.Port}");
         }
@@ -27,7 +32,7 @@ namespace OrderList.Repository.Redis
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, "Error trying to get from redis, method: GetById");
                 throw;
             }
         }
@@ -44,7 +49,7 @@ namespace OrderList.Repository.Redis
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, "Error trying to get orders from redis, method: GetEarliestFromRecentsList");
                 throw;
             }
         }
@@ -61,7 +66,7 @@ namespace OrderList.Repository.Redis
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, "Error trying to store in redis");
                 throw;
             }
         }
@@ -76,7 +81,7 @@ namespace OrderList.Repository.Redis
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, "Error trying to delete from redis");
                 throw;
             }
         }
@@ -91,7 +96,7 @@ namespace OrderList.Repository.Redis
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, "Error trying to update in redis");
                 throw;
             }
         }
