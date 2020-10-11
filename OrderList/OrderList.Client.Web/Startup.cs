@@ -8,6 +8,7 @@ using OrderList.Domain.Repositories;
 using OrderList.Domain.Services;
 using OrderList.Domain.Consumers;
 using OrderList.Domain.Events.Inbound;
+using OrderList.Repository.Mongo;
 using OrderList.Repository.Redis;
 using SimpleInjector;
 
@@ -27,7 +28,7 @@ namespace OrderList.Client.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.Configure<RedisConfiguration>(Configuration.GetSection(RedisConfiguration.Name));
+            services.Configure<MongoConfiguration>(Configuration.GetSection(MongoConfiguration.Name));
             services.Configure<RabbitMqConfiguration>(Configuration.GetSection(RabbitMqConfiguration.Name));
             services.AddSimpleInjector(container, options =>
             {
@@ -40,7 +41,7 @@ namespace OrderList.Client.Web
         
         private void InitializeContainer()
         {
-            container.RegisterSingleton<IOrderRepository, RedisOrderRepository>();
+            container.RegisterSingleton<IOrderRepository, MongoOrderRepository>();
             container.RegisterSingleton<IConsumer<OrderCreated>, OrderCreatedConsumer>();
             container.RegisterSingleton<IConsumer<OrderConfirmed>, OrderConfirmedConsumer>();
             container.RegisterSingleton<IConsumer<OrderRefused>, OrderRefusedConsumer>();

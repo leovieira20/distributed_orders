@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OrderList.Domain.Services;
@@ -22,11 +23,11 @@ namespace OrderList.Client.Web.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(string id)
+        public async Task<IActionResult> Get(string id)
         {
             try
             {
-                return Ok(_service.Get(id));
+                return Ok(await _service.GetAsync(id));
             }
             catch (Exception e)
             {
@@ -36,11 +37,11 @@ namespace OrderList.Client.Web.Controllers
         }
 
         [HttpGet("{page}/{size}")]
-        public IActionResult Get(int page, int size)
+        public async Task<IActionResult> Get(int page, int size)
         {
             try
             {
-                return Ok(_service.Get(page, size));
+                return Ok(await _service.GetAsync(page, size));
             }
             catch (Exception e)
             {

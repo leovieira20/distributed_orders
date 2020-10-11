@@ -14,11 +14,11 @@ namespace OrderList.Domain.Consumers
             _repository = repository;
         }
         
-        public void Consume(OrderCreated message)
+        public async void Consume(OrderCreated message)
         {
             try
             {
-                _repository.Create(message.Order);
+                await _repository.CreateAsync(message.Order);
             }
             catch (Exception e)
             {

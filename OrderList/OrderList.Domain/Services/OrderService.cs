@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using OrderList.Domain.Models;
 using OrderList.Domain.Repositories;
@@ -8,8 +9,8 @@ namespace OrderList.Domain.Services
 {
     public interface IOrderService
     {
-        Order Get(string id);
-        List<Order> Get(int page, int size);
+        Task<Order> GetAsync(string id);
+        Task<List<Order>> GetAsync(int page, int size);
     }
 
     public class OrderService : IOrderService
@@ -25,11 +26,11 @@ namespace OrderList.Domain.Services
             _repository = repository;
         }
 
-        public Order Get(string id)
+        public async Task<Order> GetAsync(string id)
         {
             try
             {
-                return _repository.Get(id);
+                return await _repository.GetAsync(id);
             }
             catch (Exception e)
             {
@@ -38,11 +39,11 @@ namespace OrderList.Domain.Services
             }
         }
 
-        public List<Order> Get(int page, int size)
+        public async Task<List<Order>> GetAsync(int page, int size)
         {
             try
             {
-                return _repository.Get(page, size);
+                return await _repository.GetAsync(page, size);
             }
             catch (Exception e)
             {

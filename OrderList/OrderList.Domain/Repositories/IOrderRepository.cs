@@ -1,14 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using OrderList.Domain.Models;
 
 namespace OrderList.Domain.Repositories
 {
     public interface IOrderRepository
     {
-        Order Get(string id);
-        List<Order> Get(int page, int size);
-        void Create(Order order);
-        void Delete(string orderId);
-        void Update(Order order);
+        Task<Order> GetAsync(string id);
+        Task<List<Order>> GetAsync(int page, int size);
+        Task CreateAsync(Order order);
+        Task Delete(string orderId);
+        Task UpdateStatusAsync(Order order);
+        Task UpdateDeliveryAddress(Order order, Address address);
     }
 }

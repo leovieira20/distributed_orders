@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Common.Messaging.RabbitMq;
 using Microsoft.Extensions.Logging;
 using ProductInventory.Domain.Events;
@@ -29,6 +30,7 @@ namespace ProductInventory.Domain.Consumers
         {
             try
             {
+                Thread.Sleep(3000);
                 await _stockChecker.ReserveStockForItems(message.Order.Items);
                 _systemBus.Post(new OrderConfirmed { OrderId = message.Order.OrderId });
             }

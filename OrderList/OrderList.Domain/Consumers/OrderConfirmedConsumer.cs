@@ -15,13 +15,13 @@ namespace OrderList.Domain.Consumers
             _orderRepository = orderRepository;
         }
         
-        public void Consume(OrderConfirmed message)
+        public async void Consume(OrderConfirmed message)
         {
             try
             {
-                var order = _orderRepository.Get(message.OrderId);
+                var order = await _orderRepository.GetAsync(message.OrderId);
                 order.Status = OrderStatus.Confirmed;
-                _orderRepository.Update(order);
+                await _orderRepository.UpdateStatusAsync(order);
             }
             catch (Exception e)
             {

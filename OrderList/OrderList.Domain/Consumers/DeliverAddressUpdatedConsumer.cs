@@ -14,13 +14,13 @@ namespace OrderList.Domain.Consumers
             _repository = repository;
         }
         
-        public void Consume(DeliveryAddressUpdated message)
+        public async void Consume(DeliveryAddressUpdated message)
         {
             try
             {
-                var order = _repository.Get(message.OrderId);
+                var order = await _repository.GetAsync(message.OrderId);
                 order.DeliveryAddress = message.NewAddress;
-                _repository.Update(order);
+                await _repository.UpdateDeliveryAddress(order, order.DeliveryAddress);
             }
             catch (Exception e)
             {
