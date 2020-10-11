@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using OrderList.Domain.Models;
 using OrderList.Domain.Repositories;
 using ServiceStack.Redis;
@@ -9,29 +9,91 @@ namespace OrderList.Repository.Redis
 {
     public class RedisOrderRepository : IOrderRepository
     {
-        private readonly IRedisClient _client;
+        private readonly RedisManagerPool _manager;
 
-        public RedisOrderRepository()
+        public RedisOrderRepository(IOptions<RedisConfiguration> options)
         {
-            var manager = new RedisManagerPool("localhost:6379");
-            _client = manager.GetClient();
+            var config = options.Value; 
+            _manager = new RedisManagerPool($"{config.Host}:{config.Port}");
         }
 
-        public Task<Order> GetAsync(string id)
+        public Order Get(string id)
         {
-            return Task.FromResult(_client.As<Order>().GetById(id));
+            try
+            {
+                return _manager.GetClient()
+                    .As<Order>()
+                    .GetById(id);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
-        public Task<IEnumerable<Order>> GetAsync(int page, int size)
+        public List<Order> Get(int page, int size)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var list = _manager.GetClient()
+                    .As<Order>()
+                    .GetEarliestFromRecentsList(page * size, size);
+            
+                return list;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
-        public Task CreateAsync(Order order)
+        public void Create(Order order)
         {
-            _client.As<Order>()
-                .Store(order);
-            return Task.CompletedTask;
+            try
+            {
+                var client = _manager.GetClient()
+                    .As<Order>();
+
+                client.Store(order);
+                client.AddToRecentsList(order);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+        
+        public void Delete(string orderId)
+        {
+            try
+            {
+                _manager.GetClient()
+                    .As<Order>()
+                    .DeleteById(orderId);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public void Update(Order order)
+        {
+            try
+            {
+                _manager.GetClient()
+                    .As<Order>()
+                    .Store(order);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }

@@ -28,6 +28,7 @@ namespace OrderManagement.Client.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.Configure<MongoConfiguration>(Configuration.GetSection(MongoConfiguration.Name));
             services.AddSimpleInjector(container, options =>
             {
                 options.AddAspNetCore()

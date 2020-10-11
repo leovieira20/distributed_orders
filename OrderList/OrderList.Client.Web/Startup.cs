@@ -4,11 +4,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json.Linq;
 using OrderList.Domain.Repositories;
 using OrderList.Domain.Services;
 using OrderList.Domain.Consumers;
-using OrderList.Domain.Events;
+using OrderList.Domain.Events.Inbound;
 using OrderList.Repository.Redis;
 using SimpleInjector;
 
@@ -28,6 +27,7 @@ namespace OrderList.Client.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.Configure<RedisConfiguration>(Configuration.GetSection(RedisConfiguration.Name));
             services.AddSimpleInjector(container, options =>
             {
                 options.AddAspNetCore()
@@ -40,12 +40,36 @@ namespace OrderList.Client.Web
         private void InitializeContainer()
         {
             container.RegisterSingleton<IOrderRepository, RedisOrderRepository>();
-            container.RegisterSingleton<IOrderCreatedConsumer, OrderCreatedConsumer>();
+            container.RegisterSingleton<IConsumer<OrderCreated>, OrderCreatedConsumer>();
+            container.RegisterSingleton<IConsumer<OrderConfirmed>, OrderConfirmedConsumer>();
+            container.RegisterSingleton<IConsumer<OrderRefused>, OrderRefusedConsumer>();
+            container.RegisterSingleton<IConsumer<OrderCancelled>, OrderCancelledConsumer>();
+            container.RegisterSingleton<IConsumer<DeliveryAddressUpdated>, DeliverAddressUpdatedConsumer>();
             container.RegisterSingleton<IOrderService, OrderService>();
             container.RegisterSingleton(() =>
             {
-                var service = container.GetInstance<IOrderCreatedConsumer>();
-                return new Consumer<OrderCreated>(service.Create);
+                var service = container.GetInstance<IConsumer<OrderCreated>>();
+                return new Consumer<OrderCreated>(service.Consume);
+            });
+            container.RegisterSingleton(() =>
+            {
+                var service = container.GetInstance<IConsumer<DeliveryAddressUpdated>>();
+                return new Consumer<DeliveryAddressUpdated>(service.Consume);
+            });
+            container.RegisterSingleton(() =>
+            {
+                var service = container.GetInstance<IConsumer<OrderConfirmed>>();
+                return new Consumer<OrderConfirmed>(service.Consume);
+            });
+            container.RegisterSingleton(() =>
+            {
+                var service = container.GetInstance<IConsumer<OrderRefused>>();
+                return new Consumer<OrderRefused>(service.Consume);
+            });
+            container.RegisterSingleton(() =>
+            {
+                var service = container.GetInstance<IConsumer<OrderCancelled>>();
+                return new Consumer<OrderCancelled>(service.Consume);
             });
         }
         
@@ -57,8 +81,12 @@ namespace OrderList.Client.Web
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
             container.GetInstance<Consumer<OrderCreated>>().Consume();
+            container.GetInstance<Consumer<OrderConfirmed>>().Consume();
+            container.GetInstance<Consumer<OrderRefused>>().Consume();
+            container.GetInstance<Consumer<OrderCancelled>>().Consume();
+            container.GetInstance<Consumer<DeliveryAddressUpdated>>().Consume();
             
             app.UseRouting();
             app.UseAuthorization();

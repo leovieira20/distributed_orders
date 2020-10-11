@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OrderList.Domain.Services;
 
 namespace OrderList.Client.Web.Controllers
@@ -17,15 +15,15 @@ namespace OrderList.Client.Web.Controllers
         }
         
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(string id)
+        public IActionResult Get(string id)
         {
-            return Ok(await _service.GetAsync(id));
+            return Ok(_service.Get(id));
         }
         
         [HttpGet("{page}/{size}")]
-        public async Task<IActionResult> Get(int page, int size)
+        public IActionResult Get(int page, int size)
         {
-            return Ok(await _service.GetAsync(page, size));
+            return Ok(_service.Get(page, size));
         }
     }
 }

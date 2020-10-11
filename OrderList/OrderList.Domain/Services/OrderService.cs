@@ -7,8 +7,8 @@ namespace OrderList.Domain.Services
 {
     public interface IOrderService
     {
-        Task<Order> GetAsync(string id);
-        Task<IEnumerable<Order>> GetAsync(int page, int size);
+        Order Get(string id);
+        List<Order> Get(int page, int size);
     }
 
     public class OrderService : IOrderService
@@ -20,14 +20,14 @@ namespace OrderList.Domain.Services
             _repository = repository;
         }
         
-        public async Task<Order> GetAsync(string id)
+        public Order Get(string id)
         {
-            return await _repository.GetAsync(id);
+            return _repository.Get(id);
         }
 
-        public async Task<IEnumerable<Order>> GetAsync(int page, int size)
+        public List<Order> Get(int page, int size)
         {
-            return await _repository.GetAsync(page, size);
+            return _repository.Get(page, size);
         }
     }
 }

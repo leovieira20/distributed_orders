@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using ProductInventory.Domain.Model;
 using ProductInventory.Domain.Repository;
@@ -12,9 +13,10 @@ namespace ProductInventory.Repository.Mongo
         private readonly string dbName = "distributed_orders";
         private readonly IMongoCollection<Product> _collection;
 
-        public MongoProductRepository()
+        public MongoProductRepository(IOptions<MongoConfiguration> options)
         {
-            var client = new MongoClient($"mongodb://localhost:27018/{dbName}");
+            var config = options.Value;
+            var client = new MongoClient($"mongodb://{config.Host}:{config.Port}/{dbName}");
             _collection = client
                 .GetDatabase(dbName)
                 .GetCollection<Product>("products");

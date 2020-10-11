@@ -5,20 +5,22 @@ using OrderList.Domain.Repositories;
 
 namespace OrderList.Domain.Consumers
 {
-    public class OrderCreatedConsumer : IConsumer<OrderCreated>
+    public class DeliverAddressUpdatedConsumer : IConsumer<DeliveryAddressUpdated>
     {
         private readonly IOrderRepository _repository;
 
-        public OrderCreatedConsumer(IOrderRepository repository)
+        public DeliverAddressUpdatedConsumer(IOrderRepository repository)
         {
             _repository = repository;
         }
         
-        public void Consume(OrderCreated message)
+        public void Consume(DeliveryAddressUpdated message)
         {
             try
             {
-                _repository.Create(message.Order);
+                var order = _repository.Get(message.OrderId);
+                order.DeliveryAddress = message.NewAddress;
+                _repository.Update(order);
             }
             catch (Exception e)
             {

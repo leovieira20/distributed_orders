@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using OrderManagement.Domain.Model;
 using OrderManagement.Domain.Repositories;
@@ -13,9 +14,10 @@ namespace OrderManagement.Repository.Mongo
         private readonly MongoClient _client;
         private readonly IMongoCollection<Order> _collection;
 
-        public MongoOrderRepository()
+        public MongoOrderRepository(IOptions<MongoConfiguration> options)
         {
-            _client = new MongoClient($"mongodb://localhost:27017/{dbName}");
+            var config = options.Value;
+            _client = new MongoClient($"mongodb://{config.Host}:{config.Port}/{dbName}");
             _collection = _client
                 .GetDatabase(dbName)
                 .GetCollection<Order>("orders");

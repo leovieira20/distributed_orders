@@ -5,20 +5,20 @@ using OrderList.Domain.Repositories;
 
 namespace OrderList.Domain.Consumers
 {
-    public class OrderCreatedConsumer : IConsumer<OrderCreated>
+    public class OrderCancelledConsumer : IConsumer<OrderCancelled>
     {
         private readonly IOrderRepository _repository;
 
-        public OrderCreatedConsumer(IOrderRepository repository)
+        public OrderCancelledConsumer(IOrderRepository repository)
         {
             _repository = repository;
         }
         
-        public void Consume(OrderCreated message)
+        public void Consume(OrderCancelled message)
         {
             try
             {
-                _repository.Create(message.Order);
+                _repository.Delete(message.Order.OrderId);
             }
             catch (Exception e)
             {
