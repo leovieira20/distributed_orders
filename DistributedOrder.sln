@@ -37,6 +37,14 @@ ProjectSection(SolutionItems) = preProject
 	ProductInventory\Dockerfile = ProductInventory\Dockerfile
 EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k8s", "k8s", "{B6A1E5AF-91BA-427C-ACEE-84BF0D8905A4}"
+ProjectSection(SolutionItems) = preProject
+	k8s\redis-deployment.yaml = k8s\redis-deployment.yaml
+	k8s\orderlist-deployment.yaml = k8s\orderlist-deployment.yaml
+	k8s\rabbitmq-deployment.yaml = k8s\rabbitmq-deployment.yaml
+	k8s\ingress-service.yaml = k8s\ingress-service.yaml
+EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

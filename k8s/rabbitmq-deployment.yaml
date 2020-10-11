@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    component: rabbitmq
+  ports:
+    - port: 4369
+      targetPort: 4369
+      name: 'p4369'
+    - port: 5671
+      targetPort: 5671
+      name: 'p5671'
+    - port: 5672
+      targetPort: 5672
+      name: 'p5672'
+    - port: 15671
+      targetPort: 15671
+      name: 'p15671'
+    - port: 15672
+      targetPort: 15672
+      name: 'p15672'
+    - port: 15691
+      targetPort: 15691
+      name: 'p15691'
+    - port: 15692
+      targetPort: 15692
+      name: 'p15692'
+    - port: 25672
+      targetPort: 25672
+      name: 'p25672'
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: rabbitmq
+  template:
+    metadata:
+      labels:
+        component: rabbitmq
+    spec:
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:management-alpine
+          ports:
+            - name: 'p4369'
+              containerPort: 4369
+            - name: 'p5671'
+              containerPort: 5671
+            - name: 'p5672'
+              containerPort: 5672
+            - name: 'p15671'
+              containerPort: 15671
+            - name: 'p15672'
+              containerPort: 15672
+            - name: 'p15691'
+              containerPort: 15691
+            - name: 'p15692'
+              containerPort: 15692
+            - name: 'p25672'
+              containerPort: 25672
+            

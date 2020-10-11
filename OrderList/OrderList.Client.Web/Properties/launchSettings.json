@@ -16,7 +16,8 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "REDIS__HOST": "localhost",
-        "REDIS__PORT": "6379"
+        "REDIS__PORT": "6379",
+        "RABBITMQ__HOST": "localhost"
       }
     }
   }

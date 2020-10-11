@@ -8,6 +8,7 @@ COPY OrderList/OrderList.Repository.Redis/OrderList.Repository.Redis.csproj ./Or
 COPY OrderList/OrderList.Client.Web/OrderList.Client.Web.csproj ./OrderList/OrderList.Client.Web/OrderList.Client.Web.csproj
 
 RUN dotnet new sln -n Solution
+RUN dotnet sln add Common/Common.Messaging.RabbitMq/Common.Messaging.RabbitMq.csproj
 RUN dotnet sln add OrderList/OrderList.Domain/OrderList.Domain.csproj
 RUN dotnet sln add OrderList/OrderList.Repository.Redis/OrderList.Repository.Redis.csproj
 RUN dotnet sln add OrderList/OrderList.Client.Web/OrderList.Client.Web.csproj

@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: orderlist-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    component: web
+  ports:
+    - port: 5002
+      targetPort: 5002
+
+---      
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orderlist-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: orderlist
+  template:
+    metadata:
+      labels:
+        component: orderlist
+    spec:
+      containers:
+        - name: orderlist
+          image: leonardovieira/orderlist-web
+          ports:
+            - containerPort: 5002
+          env:
+            - name: REDIS__HOST
+              value: redis-cluster-ip-service
+            - name: REDIS__PORT
+              value: '6379'
+            - name: RABBITMQ__HOST
+              value: rabbitmq-cluster-ip-service
+            - name: ASPNETCORE_URLS
+              value: http://localhost:5002/            

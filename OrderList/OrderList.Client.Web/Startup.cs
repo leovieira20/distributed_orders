@@ -28,6 +28,7 @@ namespace OrderList.Client.Web
         {
             services.AddControllers();
             services.Configure<RedisConfiguration>(Configuration.GetSection(RedisConfiguration.Name));
+            services.Configure<RabbitMqConfiguration>(Configuration.GetSection(RabbitMqConfiguration.Name));
             services.AddSimpleInjector(container, options =>
             {
                 options.AddAspNetCore()

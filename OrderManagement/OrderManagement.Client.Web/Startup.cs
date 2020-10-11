@@ -28,6 +28,7 @@ namespace OrderManagement.Client.Web
         {
             services.AddControllers();
             services.Configure<MongoConfiguration>(Configuration.GetSection(MongoConfiguration.Name));
+            services.Configure<RabbitMqConfiguration>(Configuration.GetSection(RabbitMqConfiguration.Name));
             services.AddSimpleInjector(container, options =>
             {
                 options.AddAspNetCore()

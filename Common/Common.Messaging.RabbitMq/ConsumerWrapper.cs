@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using System.Text;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -16,11 +17,13 @@ namespace Common.Messaging.RabbitMq
 
         public ConsumerWrapper(
             ILogger<ConsumerWrapper<T>> logger,
+            IOptions<RabbitMqConfiguration> options,
             IConsumer<T> consumer)
         {
             _logger = logger;
             _consumer = consumer;
-            var factory = new ConnectionFactory { HostName = "localhost" };
+            var config = options.Value;
+            var factory = new ConnectionFactory { HostName = config.Host };
             var connection = factory.CreateConnection();
             _channel = connection.CreateModel();
         }
@@ -29,6 +32,12 @@ namespace Common.Messaging.RabbitMq
         {
             var exchangeName = typeof(T).GetProperty(nameof(IEvent.Name), BindingFlags.Public | BindingFlags.Static)
                 ?.GetValue(null)?.ToString();
+
+            _channel.ExchangeDeclare(
+                exchange: exchangeName,
+                type: ExchangeType.Fanout, 
+                durable: true);
+            
             var queueName = _channel.QueueDeclare().QueueName;
             _channel.QueueBind(
                 queue: queueName,
