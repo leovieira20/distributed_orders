@@ -2,6 +2,8 @@ import 'package:distributed_orders_flutter/pages/order_creation/order_creation_v
 import 'package:flutter/material.dart';
 
 class OrderCreationPage extends StatefulWidget {
+  static String routeName = "/orderCreationPage";
+
   final OrderCreationVm vm;
 
   OrderCreationPage(this.vm, {Key key}) : super(key: key);

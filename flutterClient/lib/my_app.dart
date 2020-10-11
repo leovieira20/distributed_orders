@@ -1,5 +1,5 @@
-import 'package:distributed_orders_flutter/ioc.dart';
-import 'package:distributed_orders_flutter/pages/order_creation/order_creation.dart';
+import 'package:distributed_orders_flutter/domain/router.dart';
+import 'package:distributed_orders_flutter/pages/order_list/order_list_page.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {
@@ -11,7 +11,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: ioc<OrderCreationPage>(),
+      routes: getRoutes(),
+      initialRoute: OrderListPage.routeName,
     );
   }
 }

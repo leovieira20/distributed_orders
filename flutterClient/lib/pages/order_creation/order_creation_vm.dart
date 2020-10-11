@@ -1,14 +1,17 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:distributed_orders_flutter/consts.dart';
+import 'package:distributed_orders_flutter/domain/services/order_service.dart';
+import 'package:distributed_orders_flutter/domain/services/product_service.dart';
 import 'package:distributed_orders_flutter/main.dart';
 import 'package:flutter_guid/flutter_guid.dart';
 
-const kHostPort = "5000";
-const kHostAddressAndroid = "10.0.2.2";
-const kHostAddressIos = "localhost";
-
 class OrderCreationVm {
   String _apiEndpoint = "api/order";
+  OrderService orderService;
+  ProductService productService;
+
+  OrderCreationVm(this.orderService, this.productService);
 
   createOrder() async {
     try {
