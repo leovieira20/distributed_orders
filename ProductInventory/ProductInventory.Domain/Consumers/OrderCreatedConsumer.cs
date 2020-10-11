@@ -1,5 +1,6 @@
 using System;
 using Common.Messaging.RabbitMq;
+using Microsoft.Extensions.Logging;
 using ProductInventory.Domain.Events;
 using ProductInventory.Domain.Events.Inbound;
 using ProductInventory.Domain.Events.Outbound;
@@ -10,11 +11,16 @@ namespace ProductInventory.Domain.Consumers
 {
     public class OrderCreatedConsumer : IConsumer<OrderCreated>
     {
+        private readonly ILogger<OrderCreatedConsumer> _logger;
         private readonly IStockChecker _stockChecker;
         private readonly ISystemBus _systemBus;
 
-        public OrderCreatedConsumer(IStockChecker stockChecker, ISystemBus systemBus)
+        public OrderCreatedConsumer(
+            ILogger<OrderCreatedConsumer> logger,
+            IStockChecker stockChecker, 
+            ISystemBus systemBus)
         {
+            _logger = logger;
             _stockChecker = stockChecker;
             _systemBus = systemBus;
         }
@@ -24,12 +30,17 @@ namespace ProductInventory.Domain.Consumers
             try
             {
                 await _stockChecker.ReserveStockForItems(message.Order.Items);
-                _systemBus.PostAsync(new OrderConfirmed { OrderId = message.Order.OrderId });
+                await _systemBus.PostAsync(new OrderConfirmed { OrderId = message.Order.OrderId });
             }
             catch (NotEnoughStockForItemException e)
             {
-                Console.WriteLine(e);
-                _systemBus.PostAsync(new OrderRefused { OrderId = message.Order.OrderId });
+                _logger.LogWarning(e, "Error trying to reserve stock items");
+                await _systemBus.PostAsync(new OrderRefused { OrderId = message.Order.OrderId });
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error trying to reserve stock items");
+                throw;
             }
         }
     }

@@ -1,5 +1,6 @@
 using System;
 using Common.Messaging.RabbitMq;
+using Microsoft.Extensions.Logging;
 using ProductInventory.Domain.Events;
 using ProductInventory.Domain.Events.Inbound;
 using ProductInventory.Domain.Repository;
@@ -8,10 +9,14 @@ namespace ProductInventory.Domain.Consumers
 {
     public class OrderCancelledConsumer : IConsumer<OrderCancelled>
     {
+        private readonly ILogger<OrderCancelledConsumer> _logger;
         private readonly IProductRepository _repository;
 
-        public OrderCancelledConsumer(IProductRepository repository)
+        public OrderCancelledConsumer(
+            ILogger<OrderCancelledConsumer> logger,
+            IProductRepository repository)
         {
+            _logger = logger;
             _repository = repository;
         }
         
@@ -28,7 +33,7 @@ namespace ProductInventory.Domain.Consumers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, "Error trying to cancel order");
                 throw;
             }
         }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using ProductInventory.Domain.Model;
@@ -10,11 +11,15 @@ namespace ProductInventory.Repository.Mongo
 {
     public class MongoProductRepository : IProductRepository
     {
+        private readonly ILogger<MongoProductRepository> _logger;
         private readonly string dbName = "distributed_orders";
         private readonly IMongoCollection<Product> _collection;
 
-        public MongoProductRepository(IOptions<MongoConfiguration> options)
+        public MongoProductRepository(
+            ILogger<MongoProductRepository> logger,
+            IOptions<MongoConfiguration> options)
         {
+            _logger = logger;
             var config = options.Value;
             var client = new MongoClient($"mongodb://{config.Host}:{config.Port}/{dbName}");
             _collection = client
@@ -33,7 +38,7 @@ namespace ProductInventory.Repository.Mongo
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, $"Error trying to access mongo, method: {nameof(IMongoCollection<Order>.FindAsync)}");
                 throw;
             }
         }
@@ -53,7 +58,7 @@ namespace ProductInventory.Repository.Mongo
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, $"Error trying to access mongo, method: {nameof(IMongoCollection<Order>.FindOneAndUpdateAsync)}");
                 throw;
             }
         }
@@ -67,7 +72,7 @@ namespace ProductInventory.Repository.Mongo
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, $"Error trying to access mongo, method: {nameof(IMongoCollection<Order>.InsertOneAsync)}");
                 throw;
             }
         }
@@ -95,7 +100,7 @@ namespace ProductInventory.Repository.Mongo
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                _logger.LogError(e, $"Error trying to access mongo, method: {nameof(IMongoCollection<Order>.BulkWriteAsync)}");
                 throw;
             }
         }
