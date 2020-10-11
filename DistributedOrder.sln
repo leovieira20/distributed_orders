@@ -1,6 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OrderList", "OrderList", "{604648D8-ADCC-4CCC-BE4A-E9C283F99348}"
+ProjectSection(SolutionItems) = preProject
+	.dockerignore = .dockerignore
+EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderList.Domain", "OrderList\OrderList.Domain\OrderList.Domain.csproj", "{A4A78398-07C9-462D-957E-3C26B98A7E15}"
 EndProject
@@ -16,17 +19,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderManagement.Repository.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderManagement.Domain", "OrderManagement\OrderManagement.Domain\OrderManagement.Domain.csproj", "{41EFC9B9-725B-4FC0-90C3-81F84CEFC501}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderManagement.Messaging.RabbitMQ", "OrderManagement\OrderManagement.Messaging.RabbitMQ\OrderManagement.Messaging.RabbitMQ.csproj", "{B710B1CE-A4DB-495B-9DA8-52CC60EF839A}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProductInventory", "ProductInventory", "{43693CF3-964E-434D-9DC8-39DBE8F05FA5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductInventory.Domain", "ProductInventory\ProductInventory.Domain\ProductInventory.Domain.csproj", "{57E63C08-8EB8-44AA-8F47-24272EFF9C98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductInventory.Repository.InMemory", "ProductInventory\ProductInventory.Repository.InMemory\ProductInventory.Repository.InMemory.csproj", "{C75FA257-E51C-4280-979D-EFF47BA3E78F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductInventory.Repository.Mongo", "ProductInventory\ProductInventory.Repository.Mongo\ProductInventory.Repository.Mongo.csproj", "{095D24CF-F0A4-4F39-821D-CEC39F00322F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductInventory.Messaging.RabbitMQ", "ProductInventory\ProductInventory.Messaging.RabbitMQ\ProductInventory.Messaging.RabbitMQ.csproj", "{2A5BBB1B-C5BA-41FA-9E54-2A92A7A732C4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductInventory.Client.Web", "ProductInventory\ProductInventory.Client.Web\ProductInventory.Client.Web.csproj", "{92D8C4D9-E3AF-4DCB-9B57-6327F94DBE3A}"
 EndProject
@@ -35,6 +32,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{4B00FE01-B119-4FAC-B0DE-92CCB3830304}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Messaging.RabbitMq", "Common\Common.Messaging.RabbitMq\Common.Messaging.RabbitMq.csproj", "{A3550490-3853-4168-922E-1A53096E29F1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{7EB54447-5901-405F-BCD7-8175B0D8B9A8}"
+ProjectSection(SolutionItems) = preProject
+	OrderList\Dockerfile = OrderList\Dockerfile
+	OrderManagement\Dockerfile = OrderManagement\Dockerfile
+	ProductInventory\Dockerfile = ProductInventory\Dockerfile
+EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,26 +70,14 @@ Global
 		{41EFC9B9-725B-4FC0-90C3-81F84CEFC501}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41EFC9B9-725B-4FC0-90C3-81F84CEFC501}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41EFC9B9-725B-4FC0-90C3-81F84CEFC501}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B710B1CE-A4DB-495B-9DA8-52CC60EF839A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B710B1CE-A4DB-495B-9DA8-52CC60EF839A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B710B1CE-A4DB-495B-9DA8-52CC60EF839A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B710B1CE-A4DB-495B-9DA8-52CC60EF839A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{57E63C08-8EB8-44AA-8F47-24272EFF9C98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{57E63C08-8EB8-44AA-8F47-24272EFF9C98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57E63C08-8EB8-44AA-8F47-24272EFF9C98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57E63C08-8EB8-44AA-8F47-24272EFF9C98}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C75FA257-E51C-4280-979D-EFF47BA3E78F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C75FA257-E51C-4280-979D-EFF47BA3E78F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C75FA257-E51C-4280-979D-EFF47BA3E78F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C75FA257-E51C-4280-979D-EFF47BA3E78F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{095D24CF-F0A4-4F39-821D-CEC39F00322F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{095D24CF-F0A4-4F39-821D-CEC39F00322F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{095D24CF-F0A4-4F39-821D-CEC39F00322F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{095D24CF-F0A4-4F39-821D-CEC39F00322F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2A5BBB1B-C5BA-41FA-9E54-2A92A7A732C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2A5BBB1B-C5BA-41FA-9E54-2A92A7A732C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2A5BBB1B-C5BA-41FA-9E54-2A92A7A732C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2A5BBB1B-C5BA-41FA-9E54-2A92A7A732C4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{92D8C4D9-E3AF-4DCB-9B57-6327F94DBE3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{92D8C4D9-E3AF-4DCB-9B57-6327F94DBE3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92D8C4D9-E3AF-4DCB-9B57-6327F94DBE3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -106,11 +98,8 @@ Global
 		{1A1C04AE-A955-484E-B9D4-033441C54598} = {C58008F8-7B5C-40BC-AA3F-19014126DB06}
 		{E445BF32-BD4D-4278-831A-0A6117C57CE8} = {C58008F8-7B5C-40BC-AA3F-19014126DB06}
 		{41EFC9B9-725B-4FC0-90C3-81F84CEFC501} = {C58008F8-7B5C-40BC-AA3F-19014126DB06}
-		{B710B1CE-A4DB-495B-9DA8-52CC60EF839A} = {C58008F8-7B5C-40BC-AA3F-19014126DB06}
 		{57E63C08-8EB8-44AA-8F47-24272EFF9C98} = {43693CF3-964E-434D-9DC8-39DBE8F05FA5}
-		{C75FA257-E51C-4280-979D-EFF47BA3E78F} = {43693CF3-964E-434D-9DC8-39DBE8F05FA5}
 		{095D24CF-F0A4-4F39-821D-CEC39F00322F} = {43693CF3-964E-434D-9DC8-39DBE8F05FA5}
-		{2A5BBB1B-C5BA-41FA-9E54-2A92A7A732C4} = {43693CF3-964E-434D-9DC8-39DBE8F05FA5}
 		{92D8C4D9-E3AF-4DCB-9B57-6327F94DBE3A} = {43693CF3-964E-434D-9DC8-39DBE8F05FA5}
 		{6D6CD408-2ABE-4BBF-960F-5F5D3D4787CB} = {43693CF3-964E-434D-9DC8-39DBE8F05FA5}
 		{A3550490-3853-4168-922E-1A53096E29F1} = {4B00FE01-B119-4FAC-B0DE-92CCB3830304}
