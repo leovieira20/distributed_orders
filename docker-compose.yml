@@ -12,10 +12,15 @@ services:
     image: 'mongo:latest'
     ports:
       - 27019:27017
+  zipkin:
+    image: 'openzipkin/zipkin'
+    ports:
+      - 9411:9411
   rabbitmq:
     image: 'rabbitmq:management-alpine'
     ports:
     - 15672:15672
+    - 5672:5672
   orderlist:
     image: leonardovieira/orderlist-web
     depends_on:

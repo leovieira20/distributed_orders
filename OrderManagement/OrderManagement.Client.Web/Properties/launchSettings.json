@@ -12,12 +12,12 @@
     "OrderManagement.Web": {
       "commandName": "Project",
       "launchBrowser": false,
-      "applicationUrl": "https://localhost:5001;http://localhost:5000",
+      "applicationUrl": "http://localhost:5002",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "MONGO__HOST": "localhost",
-        "MONGO__PORT": "27017",
-        "RABBITMQ__HOST": "something"
+        "MONGO__PORT": "27018",
+        "RABBITMQ__HOST": "localhost"
       }
     }
   }

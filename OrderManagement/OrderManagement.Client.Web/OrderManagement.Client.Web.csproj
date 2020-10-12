@@ -5,8 +5,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Common\Common.Messaging.RabbitMq\Common.Messaging.RabbitMq.csproj" />
       <ProjectReference Include="..\OrderManagement.Domain\OrderManagement.Domain.csproj" />
-      <ProjectReference Include="..\OrderManagement.Messaging.RabbitMQ\OrderManagement.Messaging.RabbitMQ.csproj" />
       <ProjectReference Include="..\OrderManagement.Repository.Mongo\OrderManagement.Repository.Mongo.csproj" />
     </ItemGroup>
 
@@ -14,7 +14,7 @@
       <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.8" />
       <PackageReference Include="SimpleInjector.Integration.AspNetCore" Version="5.1.0" />
       <PackageReference Include="SimpleInjector.Integration.AspNetCore.Mvc.Core" Version="5.0.0" />
+      <PackageReference Include="Steeltoe.Management.TracingCore" Version="3.0.0" />
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     </ItemGroup>
-
-
 </Project>

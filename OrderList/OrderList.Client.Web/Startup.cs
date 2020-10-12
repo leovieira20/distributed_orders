@@ -10,6 +10,7 @@ using OrderList.Domain.Consumers;
 using OrderList.Domain.Events.Inbound;
 using OrderList.Repository.Mongo;
 using SimpleInjector;
+using Steeltoe.Management.Tracing;
 
 namespace OrderList.Client.Web
 {
@@ -27,6 +28,10 @@ namespace OrderList.Client.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDistributedTracing(Configuration, builder => builder.UseZipkinWithTraceOptions(services));
+            services.AddSwaggerGen();
+            services.AddMvcCore()
+                .AddApiExplorer();
             services.Configure<MongoConfiguration>(Configuration.GetSection(MongoConfiguration.Name));
             services.Configure<RabbitMqConfiguration>(Configuration.GetSection(RabbitMqConfiguration.Name));
             services.AddSimpleInjector(container, options =>
@@ -62,6 +67,12 @@ namespace OrderList.Client.Web
             {
                 app.UseDeveloperExceptionPage();
             }
+            
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             container.GetInstance<ConsumerWrapper<OrderCreated>>().Consume();
             container.GetInstance<ConsumerWrapper<OrderConfirmed>>().Consume();

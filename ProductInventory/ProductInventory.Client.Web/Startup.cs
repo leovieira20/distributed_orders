@@ -11,6 +11,7 @@ using ProductInventory.Domain.Repository;
 using ProductInventory.Domain.Services;
 using ProductInventory.Repository.Mongo;
 using SimpleInjector;
+using Steeltoe.Management.Tracing;
 
 namespace ProductInventory.Client.Web
 {
@@ -28,6 +29,10 @@ namespace ProductInventory.Client.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSwaggerGen();
+            services.AddDistributedTracing(Configuration, builder => builder.UseZipkinWithTraceOptions(services));
+            services.AddMvcCore()
+                .AddApiExplorer();
             services.Configure<MongoConfiguration>(Configuration.GetSection(MongoConfiguration.Name));
             services.Configure<RabbitMqConfiguration>(Configuration.GetSection(RabbitMqConfiguration.Name));
             services.AddSimpleInjector(container, options =>
@@ -60,6 +65,12 @@ namespace ProductInventory.Client.Web
             {
                 app.UseDeveloperExceptionPage();
             }
+            
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             var repository = container.GetInstance<IProductRepository>();
             repository.Create(Product.CreateWithIdAndQuantity("2b2dab36-f6de-4677-a4b2-abbf57731fa4", 2));
