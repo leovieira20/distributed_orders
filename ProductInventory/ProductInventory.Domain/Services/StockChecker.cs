@@ -8,7 +8,7 @@ namespace ProductInventory.Domain.Services
 {
     public interface IStockChecker
     {
-        Task ReserveStockForItems(IEnumerable<OrderItem> items);
+        Task ReserveStockForItemsAsync(IEnumerable<OrderItem> items);
     }
     
     public class StockChecker : IStockChecker
@@ -20,7 +20,7 @@ namespace ProductInventory.Domain.Services
             _repository = repository;
         }
         
-        public async Task ReserveStockForItems(IEnumerable<OrderItem> items)
+        public async Task ReserveStockForItemsAsync(IEnumerable<OrderItem> items)
         {
             var products = new List<Product>();
             foreach (var i in items)

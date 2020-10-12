@@ -31,7 +31,7 @@ namespace ProductInventory.Domain.Consumers
             try
             {
                 Thread.Sleep(3000);
-                await _stockChecker.ReserveStockForItems(message.Order.Items);
+                await _stockChecker.ReserveStockForItemsAsync(message.Order.Items);
                 _systemBus.Post(new OrderConfirmed { OrderId = message.Order.OrderId });
             }
             catch (NotEnoughStockForItemException e)
