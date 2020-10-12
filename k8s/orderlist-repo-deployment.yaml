@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: orderlist-repo-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    component: orderlist-repo
+  ports:
+    - port: 27017
+      targetPort: 27017
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orderlist-repo-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: orderlist-repo
+  template:
+    metadata:
+      labels:
+        component: orderlist-repo
+    spec:
+      containers:
+        - name: orderlist-repo
+          image: mongo
+          ports:
+            - containerPort: 27017

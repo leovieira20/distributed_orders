@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: orderlist-cluster-ip-service
+  name: product-inventory-cluster-ip-service
 spec:
   type: ClusterIP
   selector:
-    component: orderlist
+    component: product-inventory
   ports:
-    - port: 6001
+    - port: 6003
       targetPort: 80
 
 ---
@@ -15,26 +15,26 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: orderlist-deployment
+  name: product-inventory-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      component: orderlist
+      component: product-inventory
   template:
     metadata:
       labels:
-        component: orderlist
+        component: product-inventory
     spec:
       containers:
-        - name: orderlist
-          image: leonardovieira/orderlist-web
+        - name: product-inventory
+          image: leonardovieira/productinventory-web
           ports:
             - containerPort: 80
           env:
             - name: MONGO__HOST
-              value: orderlist-repo-cluster-ip-service
+              value: product-inventory-repo-cluster-ip-service
             - name: MONGO__PORT
-              value: '27017'
+              value: '27019'
             - name: RABBITMQ__HOST
               value: rabbitmq-cluster-ip-service                        

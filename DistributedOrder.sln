@@ -37,10 +37,15 @@ EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k8s", "k8s", "{B6A1E5AF-91BA-427C-ACEE-84BF0D8905A4}"
 ProjectSection(SolutionItems) = preProject
-	k8s\redis-deployment.yaml = k8s\redis-deployment.yaml
 	k8s\orderlist-deployment.yaml = k8s\orderlist-deployment.yaml
 	k8s\rabbitmq-deployment.yaml = k8s\rabbitmq-deployment.yaml
 	k8s\ingress-service.yaml = k8s\ingress-service.yaml
+	k8s\product-inventory-deployment.yaml = k8s\product-inventory-deployment.yaml
+	k8s\product-inventory-repo-deployment.yaml = k8s\product-inventory-repo-deployment.yaml
+	k8s\ordermanagement-deployment.yaml = k8s\ordermanagement-deployment.yaml
+	k8s\ordermanagement-repo-deployment.yaml = k8s\ordermanagement-repo-deployment.yaml
+	k8s\orderlist-repo-deployment.yaml = k8s\orderlist-repo-deployment.yaml
+	k8s\ingress-test.yaml = k8s\ingress-test.yaml
 EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderList.Repository.Mongo", "OrderList\OrderList.Repository.Mongo\OrderList.Repository.Mongo.csproj", "{BF602381-99F1-41CB-AD78-81840F84A57C}"
