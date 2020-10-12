@@ -8,7 +8,12 @@
     "@testing-library/user-event": "^7.1.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.3"
+    "react-scripts": "3.4.3",
+    "axios": "0.20.0",
+    "@material-ui/core": "4.11.0",
+    "@material-ui/icons": "4.9.1",
+    "mobx": "6.0.1",
+    "mobx-react": "7.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
