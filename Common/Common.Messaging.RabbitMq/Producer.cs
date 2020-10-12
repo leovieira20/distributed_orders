@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 
@@ -12,10 +13,13 @@ namespace Common.Messaging.RabbitMq
         private readonly ILogger<Producer> _logger;
         private readonly IModel _channel;
 
-        public Producer(ILogger<Producer> logger)
+        public Producer(
+            ILogger<Producer> logger,
+            IOptions<RabbitMqConfiguration> options)
         {
             _logger = logger;
-            var factory = new ConnectionFactory { HostName = "localhost" };
+            var config = options.Value;
+            var factory = new ConnectionFactory { HostName = config.Host };
             var connection = factory.CreateConnection();
             _channel = connection.CreateModel();
         }

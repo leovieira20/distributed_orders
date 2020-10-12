@@ -1,37 +1,51 @@
 version: '3'
 services:  
   orderlist-repo:
-    image: 'redis:latest'
+    image: 'mongo:latest'
+    ports:
+      - 27017:27017
   ordermanagement-repo:
     image: 'mongo:latest'
+    ports:
+      - 27018:27017
   productinventory-repo:
     image: 'mongo:latest'
+    ports:
+      - 27019:27017
   rabbitmq:
     image: 'rabbitmq:management-alpine'
+    ports:
+    - 15672:15672
   orderlist:
     image: leonardovieira/orderlist-web
     depends_on:
       - rabbitmq
       - orderlist-repo
-    environment:
-      - REDIS_HOST=orderlist-repo
-      - REDIS_PORT=6379
+    environment:      
+      - MONGO__HOST=orderlist-repo
+      - MONGO__PORT=27017
       - RABBITMQ__HOST=rabbitmq
+    ports:
+    - 4001:80
   ordermanagement:
     image: leonardovieira/ordermanagement-web
     depends_on:       
       - rabbitmq
       - ordermanagement-repo
-    environment:
+    environment:      
       - MONGO__HOST=ordermanagement-repo
-      - MONGO__PORT=27017      
+      - MONGO__PORT=27017
       - RABBITMQ__HOST=rabbitmq
+    ports:
+      - 4002:80
   productinventory:
     image: leonardovieira/productinventory-web
     depends_on:
       - rabbitmq
       - productinventory-repo
-    environment:
+    environment:      
       - MONGO__HOST=productinventory-repo
       - MONGO__PORT=27017
       - RABBITMQ__HOST=rabbitmq
+    ports:
+      - 4003:80

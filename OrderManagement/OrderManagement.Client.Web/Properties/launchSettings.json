@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "MONGO__HOST": "localhost",
         "MONGO__PORT": "27017",
-        "RABBITMQ__HOST": "localhost"
+        "RABBITMQ__HOST": "something"
       }
     }
   }

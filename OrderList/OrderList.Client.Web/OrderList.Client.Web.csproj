@@ -8,7 +8,6 @@
       <ProjectReference Include="..\..\Common\Common.Messaging.RabbitMq\Common.Messaging.RabbitMq.csproj" />
       <ProjectReference Include="..\OrderList.Domain\OrderList.Domain.csproj" />
       <ProjectReference Include="..\OrderList.Repository.Mongo\OrderList.Repository.Mongo.csproj" />
-      <ProjectReference Include="..\OrderList.Repository.Redis\OrderList.Repository.Redis.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -9,7 +9,6 @@ using OrderList.Domain.Services;
 using OrderList.Domain.Consumers;
 using OrderList.Domain.Events.Inbound;
 using OrderList.Repository.Mongo;
-using OrderList.Repository.Redis;
 using SimpleInjector;
 
 namespace OrderList.Client.Web
