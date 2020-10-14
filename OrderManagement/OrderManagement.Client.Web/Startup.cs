@@ -27,6 +27,8 @@ namespace OrderManagement.Client.Web
         
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+                options.AddPolicy("default", builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
             services.AddControllers();
             services.AddSwaggerGen();
             services.AddDistributedTracing(Configuration, builder => builder.UseZipkinWithTraceOptions(services));
@@ -73,6 +75,7 @@ namespace OrderManagement.Client.Web
             container.GetInstance<ConsumerWrapper<OrderRefused>>().Consume();
             
             app.UseRouting();
+            app.UseCors("default");
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }

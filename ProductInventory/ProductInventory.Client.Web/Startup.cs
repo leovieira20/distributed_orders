@@ -1,3 +1,4 @@
+using System;
 using Common.Messaging.RabbitMq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,6 +29,8 @@ namespace ProductInventory.Client.Web
         
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+                options.AddPolicy("default", builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
             services.AddControllers();
             services.AddSwaggerGen();
             services.AddDistributedTracing(Configuration, builder => builder.UseZipkinWithTraceOptions(services));
@@ -73,15 +76,18 @@ namespace ProductInventory.Client.Web
             });
 
             var repository = container.GetInstance<IProductRepository>();
-            repository.Create(Product.CreateWithIdAndQuantity("2b2dab36-f6de-4677-a4b2-abbf57731fa4", 2));
-            repository.Create(Product.CreateWithIdAndQuantity("adc366bc-43c6-4420-867d-e1bb96ada786", 3));
-            repository.Create(Product.CreateWithIdAndQuantity("bf75aa45-6e94-4655-98f8-6885bf3d1393", 5));
+            repository.Create(Product.CreateWithIdAndQuantity(Guid.NewGuid().ToString(), new Random().Next(10)));
+            repository.Create(Product.CreateWithIdAndQuantity(Guid.NewGuid().ToString(), new Random().Next(10)));
+            repository.Create(Product.CreateWithIdAndQuantity(Guid.NewGuid().ToString(), new Random().Next(10)));
             
             container.GetInstance<ConsumerWrapper<OrderCreated>>().Consume();
             container.GetInstance<ConsumerWrapper<OrderCancelled>>().Consume();
             container.GetInstance<ConsumerWrapper<OrderItemsUpdated>>().Consume();
 
             app.UseRouting();
+
+            app.UseCors("default");
+            
             app.UseAuthorization();
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

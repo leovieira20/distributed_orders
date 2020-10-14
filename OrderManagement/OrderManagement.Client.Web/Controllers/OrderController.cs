@@ -39,8 +39,8 @@ namespace OrderManagement.Client.Web.Controllers
             }
         }
 
-        [HttpDelete("[action]")]
-        public async Task<IActionResult> Cancel([FromBody] string id)
+        [HttpDelete("[action]/{id}")]
+        public async Task<IActionResult> Cancel(string id)
         {
             try
             {

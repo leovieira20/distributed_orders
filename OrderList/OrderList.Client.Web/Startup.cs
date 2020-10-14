@@ -17,16 +17,18 @@ namespace OrderList.Client.Web
     public class Startup
     {
         private readonly Container container = new Container();
-        
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
-        
+
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+                options.AddPolicy("default", builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
             services.AddControllers();
             services.AddDistributedTracing(Configuration, builder => builder.UseZipkinWithTraceOptions(services));
             services.AddSwaggerGen();
@@ -42,7 +44,7 @@ namespace OrderList.Client.Web
 
             InitializeContainer();
         }
-        
+
         private void InitializeContainer()
         {
             container.RegisterSingleton<IOrderRepository, MongoOrderRepository>();
@@ -58,30 +60,27 @@ namespace OrderList.Client.Web
             container.RegisterSingleton<ConsumerWrapper<OrderCancelled>>();
             container.RegisterSingleton<ConsumerWrapper<DeliveryAddressUpdated>>();
         }
-        
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseSimpleInjector(container);
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1"); });
 
             container.GetInstance<ConsumerWrapper<OrderCreated>>().Consume();
             container.GetInstance<ConsumerWrapper<OrderConfirmed>>().Consume();
             container.GetInstance<ConsumerWrapper<OrderRefused>>().Consume();
             container.GetInstance<ConsumerWrapper<OrderCancelled>>().Consume();
             container.GetInstance<ConsumerWrapper<DeliveryAddressUpdated>>().Consume();
-            
+
             app.UseRouting();
-            app.UseAuthorization();
+            app.UseCors("default");
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }

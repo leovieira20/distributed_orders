@@ -2,6 +2,7 @@ import { action, makeObservable, observable } from "mobx";
 import { ProductService } from "../services/ProductService";
 
 export class ProductListStore {
+    service = new ProductService();
     products = [];
 
     constructor() {
@@ -9,7 +10,7 @@ export class ProductListStore {
             products: observable,
             getAll: action
         });
-        this.service = new ProductService();
+        this.getAll();
     }
 
     async getAll() {
