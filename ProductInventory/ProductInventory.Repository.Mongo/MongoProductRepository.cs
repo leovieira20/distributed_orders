@@ -1,40 +1,45 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using ProductInventory.Domain.Model;
 using ProductInventory.Domain.Repository;
+using ProductInventory.Repository.Mongo.Models;
 
 namespace ProductInventory.Repository.Mongo
 {
     public class MongoProductRepository : IProductRepository
     {
         private readonly ILogger<MongoProductRepository> _logger;
+        private readonly IMapper _mapper;
         private readonly string dbName = "distributed_orders";
-        private readonly IMongoCollection<Product> _collection;
+        private readonly IMongoCollection<ProductDTO> _collection;
 
         public MongoProductRepository(
             ILogger<MongoProductRepository> logger,
-            IOptions<MongoConfiguration> options)
+            IOptions<MongoConfiguration> options,
+            IMapper mapper)
         {
             _logger = logger;
+            _mapper = mapper;
             var config = options.Value;
             var client = new MongoClient($"mongodb://{config.Host}:{config.Port}/{dbName}");
             _collection = client
                 .GetDatabase(dbName)
-                .GetCollection<Product>("products");
+                .GetCollection<ProductDTO>("products");
         }
 
-        public async Task<Product> Get(string id)
+        public async Task<Product> GetAsync(string id)
         {
             try
             {
                 var items = await _collection
-                    .FindAsync(new ExpressionFilterDefinition<Product>(product => product.ProductId == id));
+                    .FindAsync(new ExpressionFilterDefinition<ProductDTO>(product => product.ProductId == id));
 
-                return items.FirstOrDefault();
+                return _mapper.Map<Product>(items.FirstOrDefault());
             }
             catch (Exception e)
             {
@@ -47,8 +52,8 @@ namespace ProductInventory.Repository.Mongo
         {
             try
             {
-                var cursor = await _collection.FindAsync(Builders<Product>.Filter.Empty);
-                return await cursor.ToListAsync();
+                var cursor = await _collection.FindAsync(Builders<ProductDTO>.Filter.Empty);
+                return _mapper.Map<List<Product>>(await cursor.ToListAsync());
             }
             catch (Exception e)
             {
@@ -61,14 +66,14 @@ namespace ProductInventory.Repository.Mongo
         {
             try
             {
-                var filter = new ExpressionFilterDefinition<Product>(p => p.ProductId == product.ProductId);
-                var updateDefinitionList = new List<UpdateDefinition<Product>>
+                var filter = new ExpressionFilterDefinition<ProductDTO>(p => p.ProductId == product.ProductId);
+                var updateDefinitionList = new List<UpdateDefinition<ProductDTO>>
                 {
-                    new UpdateDefinitionBuilder<Product>().Set(p => p.AvailableQuantity, product.AvailableQuantity),
-                    new UpdateDefinitionBuilder<Product>().Set(p => p.ReservedQuantity, product.ReservedQuantity)
+                    new UpdateDefinitionBuilder<ProductDTO>().Set(p => p.AvailableQuantity, product.AvailableQuantity),
+                    new UpdateDefinitionBuilder<ProductDTO>().Set(p => p.ReservedQuantity, product.ReservedQuantity)
                 };
 
-                await _collection.FindOneAndUpdateAsync<Product>(filter, Builders<Product>.Update.Combine(updateDefinitionList));
+                await _collection.FindOneAndUpdateAsync<ProductDTO>(filter, Builders<ProductDTO>.Update.Combine(updateDefinitionList));
             }
             catch (Exception e)
             {
@@ -77,12 +82,12 @@ namespace ProductInventory.Repository.Mongo
             }
         }
 
-        public async Task Create(Product product)
+        public async Task CreateAsync(Product product)
         {
             try
             {
                 await _collection
-                    .InsertOneAsync(product);
+                    .InsertOneAsync(_mapper.Map<ProductDTO>(product));
             }
             catch (Exception e)
             {
@@ -95,18 +100,18 @@ namespace ProductInventory.Repository.Mongo
         {
             try
             {
-                var models = new List<WriteModel<Product>>();
+                var models = new List<WriteModel<ProductDTO>>();
 
                 foreach (var product in productsToUpdate)
                 {
-                    var filter = new ExpressionFilterDefinition<Product>(p => p.ProductId == product.ProductId);
-                    var updateDefinitionList = new List<UpdateDefinition<Product>>
+                    var filter = new ExpressionFilterDefinition<ProductDTO>(p => p.ProductId == product.ProductId);
+                    var updateDefinitionList = new List<UpdateDefinition<ProductDTO>>
                     {
-                        new UpdateDefinitionBuilder<Product>().Set(p => p.AvailableQuantity, product.AvailableQuantity),
-                        new UpdateDefinitionBuilder<Product>().Set(p => p.ReservedQuantity, product.ReservedQuantity)
+                        new UpdateDefinitionBuilder<ProductDTO>().Set(p => p.AvailableQuantity, product.AvailableQuantity),
+                        new UpdateDefinitionBuilder<ProductDTO>().Set(p => p.ReservedQuantity, product.ReservedQuantity)
                     };
                     
-                    var action = new UpdateOneModel<Product>(filter, Builders<Product>.Update.Combine(updateDefinitionList));
+                    var action = new UpdateOneModel<ProductDTO>(filter, Builders<ProductDTO>.Update.Combine(updateDefinitionList));
                     models.Add(action);
                 }
                 

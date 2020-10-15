@@ -25,7 +25,7 @@ namespace ProductInventory.Domain.Services
             var products = new List<Product>();
             foreach (var i in items)
             {
-                var p = await _repository.Get(i.ProductId);
+                var p = await _repository.GetAsync(i.ProductId);
                 if (p.AvailableQuantity < i.Quantity)
                 {
                     throw new NotEnoughStockForItemException(i.ProductId);

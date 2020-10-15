@@ -6,10 +6,10 @@ namespace ProductInventory.Domain.Repository
 {
     public interface IProductRepository
     {
-        Task<Product> Get(string id);
+        Task<Product> GetAsync(string id);
         Task<List<Product>> GetAll();
         Task Update(Product product);
-        Task Create(Product product);
+        Task CreateAsync(Product product);
         Task BulkUpdate(List<Product> productsToUpdate);
     }
 }

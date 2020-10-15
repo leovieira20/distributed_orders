@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OrderManagement.Client.Web.Infrastructure;
 using OrderManagement.Domain.Consumers;
 using OrderManagement.Domain.Events.Inbound;
 using OrderManagement.Domain.Repositories;
@@ -47,6 +48,7 @@ namespace OrderManagement.Client.Web
 
         public void InitializeContainer()
         {
+            container.RegisterSingleton(() => new MapperProvider(container).GetMapper());
             container.RegisterSingleton<ISystemBus, Producer>();
             container.RegisterSingleton<IOrderRepository, MongoOrderRepository>();
             container.RegisterSingleton<IOrderService, OrderService>();

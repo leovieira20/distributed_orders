@@ -1,5 +1,4 @@
 using System;
-using MongoDB.Bson;
 
 namespace ProductInventory.Domain.Model
 {
@@ -12,6 +11,7 @@ namespace ProductInventory.Domain.Model
 
         public Product()
         {
+            ProductId = Guid.NewGuid().ToString();
         }
 
         private Product(string productId, int quantity)
@@ -31,9 +31,9 @@ namespace ProductInventory.Domain.Model
             AvailableQuantity += quantity;
             ReservedQuantity -= quantity;
         }
-
-        public ObjectId _id { get; set; }
+        
         public string ProductId { get; set; }
+        public string Name { get; set; }
         public int AvailableQuantity { get; set; }
         public int ReservedQuantity { get; set; }
     }

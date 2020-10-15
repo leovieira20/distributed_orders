@@ -1,4 +1,4 @@
-﻿using OrderManagement.Domain.Model;
+﻿using ProductInventory.Domain.Model;
 
 namespace ProductInventory.Domain.Tests.Support.Factories
 {

@@ -5,12 +5,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ProductInventory.Client.Web.Infrastructure;
 using ProductInventory.Domain.Consumers;
 using ProductInventory.Domain.Events.Inbound;
 using ProductInventory.Domain.Model;
 using ProductInventory.Domain.Repository;
 using ProductInventory.Domain.Services;
 using ProductInventory.Repository.Mongo;
+using ProductInventory.Repository.Mongo.Mapping;
 using SimpleInjector;
 using Steeltoe.Management.Tracing;
 
@@ -49,6 +51,7 @@ namespace ProductInventory.Client.Web
         
         private void InitializeContainer()
         {
+            container.RegisterSingleton(() => new MapperProvider(container).GetMapper());
             container.RegisterSingleton<ISystemBus, Producer>();
             container.RegisterSingleton<IProductRepository, MongoProductRepository>();
             container.RegisterSingleton<IStockChecker, StockChecker>();
@@ -76,9 +79,9 @@ namespace ProductInventory.Client.Web
             });
 
             var repository = container.GetInstance<IProductRepository>();
-            repository.Create(Product.CreateWithIdAndQuantity(Guid.NewGuid().ToString(), new Random().Next(10)));
-            repository.Create(Product.CreateWithIdAndQuantity(Guid.NewGuid().ToString(), new Random().Next(10)));
-            repository.Create(Product.CreateWithIdAndQuantity(Guid.NewGuid().ToString(), new Random().Next(10)));
+            repository.CreateAsync(Product.CreateWithIdAndQuantity(Guid.NewGuid().ToString(), new Random().Next(10)));
+            repository.CreateAsync(Product.CreateWithIdAndQuantity(Guid.NewGuid().ToString(), new Random().Next(10)));
+            repository.CreateAsync(Product.CreateWithIdAndQuantity(Guid.NewGuid().ToString(), new Random().Next(10)));
             
             container.GetInstance<ConsumerWrapper<OrderCreated>>().Consume();
             container.GetInstance<ConsumerWrapper<OrderCancelled>>().Consume();

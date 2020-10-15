@@ -26,7 +26,7 @@ namespace ProductInventory.Domain.Consumers
             {
                 foreach (var i in message.Order.Items)
                 {
-                    var product = await _repository.Get(i.ProductId);
+                    var product = await _repository.GetAsync(i.ProductId);
                     product.ReleaseQuantity(i.Quantity);
                     await _repository.Update(product);
                 }

@@ -1,6 +1,6 @@
-namespace OrderManagement.Domain.Model
+namespace OrderManagement.Repository.Mongo.Models
 {
-    public enum OrderStatus
+    public enum OrderStatusDTO
     {
         Created = 0,
         Cancelled = 1,

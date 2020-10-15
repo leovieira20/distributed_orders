@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OrderList.Client.Web.Infrastructure;
 using OrderList.Domain.Repositories;
 using OrderList.Domain.Services;
 using OrderList.Domain.Consumers;
@@ -47,6 +48,7 @@ namespace OrderList.Client.Web
 
         private void InitializeContainer()
         {
+            container.RegisterSingleton(() => new MapperProvider(container).GetMapper());
             container.RegisterSingleton<IOrderRepository, MongoOrderRepository>();
             container.RegisterSingleton<IConsumer<OrderCreated>, OrderCreatedConsumer>();
             container.RegisterSingleton<IConsumer<OrderConfirmed>, OrderConfirmedConsumer>();

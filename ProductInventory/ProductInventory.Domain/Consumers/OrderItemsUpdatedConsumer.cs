@@ -28,7 +28,7 @@ namespace ProductInventory.Domain.Consumers
                 var productsToUpdate = new List<Product>();
                 foreach (var i in message.OldItems)
                 {
-                    var p = await _repository.Get(i.ProductId);
+                    var p = await _repository.GetAsync(i.ProductId);
                     p.ReleaseQuantity(i.Quantity);
                     productsToUpdate.Add(p);
                 }
@@ -38,7 +38,7 @@ namespace ProductInventory.Domain.Consumers
 
                 foreach (var i in message.NewItems)
                 {
-                    var p = await _repository.Get(i.ProductId);
+                    var p = await _repository.GetAsync(i.ProductId);
                     p.ReserveQuantity(i.Quantity);
                     productsToUpdate.Add(p);
                 }

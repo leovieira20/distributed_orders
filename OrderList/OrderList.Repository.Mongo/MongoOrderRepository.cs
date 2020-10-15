@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using OrderList.Domain.Models;
 using OrderList.Domain.Repositories;
+using OrderManagement.Repository.Mongo.Models;
 
 namespace OrderList.Repository.Mongo
 {
@@ -13,28 +15,31 @@ namespace OrderList.Repository.Mongo
     {
         private readonly string _dbName = "distributed_orders";
         private readonly ILogger<MongoOrderRepository> _logger;
-        private readonly IMongoCollection<Order> _collection;
+        private readonly IMapper _mapper;
+        private readonly IMongoCollection<OrderDTO> _collection;
 
         public MongoOrderRepository(
             ILogger<MongoOrderRepository> logger, 
-            IOptions<MongoConfiguration> options)
+            IOptions<MongoConfiguration> options,
+            IMapper mapper)
         {
             _logger = logger;
+            _mapper = mapper;
 
             var config = options.Value;
             var client = new MongoClient($"mongodb://{config.Host}:{config.Port}/{_dbName}");
             _collection = client
                 .GetDatabase(_dbName)
-                .GetCollection<Order>("orders");
+                .GetCollection<OrderDTO>("orders");
         }
         public async Task<Order> GetAsync(string id)
         {
             try
             {
                 var items = await _collection
-                    .FindAsync(Builders<Order>.Filter.Where(x => x.OrderId == id));
+                    .FindAsync(Builders<OrderDTO>.Filter.Where(x => x.OrderId == id));
 
-                return items.FirstOrDefault();
+                return _mapper.Map<Order>(items.FirstOrDefault());
             }
             catch (Exception e)
             {
@@ -47,11 +52,12 @@ namespace OrderList.Repository.Mongo
         {
             try
             {
-                return await _collection
-                    .Find(Builders<Order>.Filter.Empty)
+                var list = await _collection
+                    .Find(Builders<OrderDTO>.Filter.Empty)
                     .Skip(page * size)
                     .Limit(size)
                     .ToListAsync();
+                return _mapper.Map<List<Order>>(list);
             }
             catch (Exception e)
             {
@@ -64,7 +70,7 @@ namespace OrderList.Repository.Mongo
         {
             try
             {
-                await _collection.InsertOneAsync(order);
+                await _collection.InsertOneAsync(_mapper.Map<OrderDTO>(order));
             }
             catch (Exception e)
             {
@@ -78,7 +84,7 @@ namespace OrderList.Repository.Mongo
             try
             {
                 await _collection
-                    .DeleteOneAsync(Builders<Order>.Filter.Eq(order => order.OrderId, orderId));
+                    .DeleteOneAsync(Builders<OrderDTO>.Filter.Eq(order => order.OrderId, orderId));
             }
             catch (Exception e)
             {
@@ -91,13 +97,13 @@ namespace OrderList.Repository.Mongo
         {
             try
             {
-                var filter = Builders<Order>.Filter.Eq(x => x.OrderId, order.OrderId);
-                var update = Builders<Order>.Update.Set(x => x.Status, order.Status);
+                var filter = Builders<OrderDTO>.Filter.Eq(x => x.OrderId, order.OrderId);
+                var update = Builders<OrderDTO>.Update.Set(x => x.Status, _mapper.Map<OrderStatusDTO>(order.Status));
                 await _collection.FindOneAndUpdateAsync(filter, update);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, $"Error trying to access mongo, method: {nameof(IMongoCollection<Order>.FindOneAndUpdateAsync)}");
+                _logger.LogError(e, $"Error trying to access mongo, method: {nameof(IMongoCollection<OrderDTO>.FindOneAndUpdateAsync)}");
                 throw;
             }
         }
@@ -106,13 +112,13 @@ namespace OrderList.Repository.Mongo
         {
             try
             {
-                var filter = Builders<Order>.Filter.Eq(x => x.OrderId, order.OrderId);
-                var update = Builders<Order>.Update.Set(x => x.DeliveryAddress, order.DeliveryAddress);
+                var filter = Builders<OrderDTO>.Filter.Eq(x => x.OrderId, order.OrderId);
+                var update = Builders<OrderDTO>.Update.Set(x => x.DeliveryAddress, _mapper.Map<AddressDTO>(order.DeliveryAddress));
                 await _collection.FindOneAndUpdateAsync(filter, update);
             }
             catch (Exception e)
             {
-                _logger.LogError(e, $"Error trying to access mongo, method: {nameof(IMongoCollection<Order>.FindOneAndUpdateAsync)}");
+                _logger.LogError(e, $"Error trying to access mongo, method: {nameof(IMongoCollection<OrderDTO>.FindOneAndUpdateAsync)}");
                 throw;
             }
         }
